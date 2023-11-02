@@ -20,7 +20,7 @@ const HomeBanner = () => {
         </p>
         <Link
           to="/"
-          className="w-[90%] md:w-[80%] text-white text-center bg-[#778B37] mt-10 rounded-md py-2 bg-red-500"
+          className="w-[90%] md:w-[80%] text-white text-center bg-[#778B37] mt-10 rounded-md py-2"
         >
           Thử ngay
         </Link>
