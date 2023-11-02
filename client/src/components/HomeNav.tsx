@@ -32,7 +32,7 @@ const HomeNav = () => {
     >
       <Link to="/">
         <img
-          src="./assets/logo.png"
+          src="../assets/logo.png"
           alt="logo"
           className="w-[230px] hover:cursor-pointer"
         />
