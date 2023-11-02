@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const HomeCardSmall = () => {
   return (
     <div className="flex flex-col w-[180px] md:h-[300px]">
-      <Link to="/detail/1">
+      <Link to="/product/1">
         <img
           src="../assets/coffee1.png"
           className="w-[100%] shadow-md rounded-md"

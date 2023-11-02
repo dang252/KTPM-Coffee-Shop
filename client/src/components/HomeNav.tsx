@@ -56,14 +56,14 @@ const HomeNav = () => {
             </div>
           </Link>
           <div className="menu-dropdown invisible group-hover:visible px-[50px] py-5 absolute w-[100%] left-0 top-[30px] flex flex-wrap gap-[60px] justify-center">
-            <Link to="/">
+            <Link to="/collections/all">
               <div className="sub-menu text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                 <p className="pr-[50px] font-bold">Tất Cả</p>
                 <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
               </div>
             </Link>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/coffee">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Cà Phê</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -99,7 +99,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/tea">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Trà</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -128,7 +128,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/cloud">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Cloud</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -150,7 +150,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/hi-tea">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Hi-Tea Healthy</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -179,7 +179,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/tra-xanh">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Trà Xanh - Sô cô la</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -201,7 +201,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/da-xay">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Thức uống đá xay</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -216,7 +216,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/snack">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Bánh & Snack</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>
@@ -252,7 +252,7 @@ const HomeNav = () => {
               </Link>
             </div>
             <div className="flex flex-col gap-2">
-              <Link to="/">
+              <Link to="/collections/thuong-thuc-tai-nha">
                 <div className="sub-menu mb-3 text-left text-[16px] hover:cursor-pointer hover:text-[#e57905]">
                   <p className="pr-[50px] font-bold">Thưởng Thức Tại Nhà</p>
                   <p className="sub-menu-underline bg-black w-[100%] h-[3px]"></p>

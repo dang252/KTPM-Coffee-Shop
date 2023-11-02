@@ -7,9 +7,11 @@ import HomeNav from "../components/HomeNav";
 import HomeNavMobile from "../components/HomeNavMobile";
 import HomeCarousel from "../components/HomeCarousel";
 import HomeContent from "../components/HomeContent";
-import DetailProduct from "./DetailProduct";
 import HomeBanner from "../components/HomeBanner";
 import HomeFooter from "../components/HomeFooter";
+
+import DetailProduct from "./DetailProduct";
+import Collections from "./Collections";
 
 const Home = () => {
   useEffect(() => {
@@ -33,7 +35,8 @@ const Home = () => {
             </>
           }
         />
-        <Route path="/detail/:1" element={<DetailProduct />} />
+        <Route path="/product/:1" element={<DetailProduct />} />
+        <Route path="/collections/:category" element={<Collections />} />
       </Routes>
       <HomeFooter />
     </div>
