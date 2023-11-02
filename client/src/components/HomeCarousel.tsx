@@ -3,7 +3,7 @@ import { Carousel } from "@material-tailwind/react";
 const HomeCarousel = () => {
   return (
     <Carousel
-      className="absolute z-10 mt-[100px] md:mt-[53px] w-[100%] h-[560px]"
+      className="absolute z-10 mt-[100px] md:mt-[53px] w-[100%] h-[300px] md:h-[560px]"
       autoplay={true}
       loop={true}
       navigation={({ setActiveIndex, activeIndex, length }) => (

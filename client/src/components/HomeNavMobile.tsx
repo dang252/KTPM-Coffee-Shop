@@ -87,7 +87,7 @@ const HomeNavMobile = () => {
         </div>
         <Link to="/">
           <img
-            src="./assets/logo.png"
+            src="../assets/logo.png"
             alt="logo"
             className="w-[180px] hover:cursor-pointer"
           />

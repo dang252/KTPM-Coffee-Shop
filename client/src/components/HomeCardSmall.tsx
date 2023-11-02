@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
-const HomeCard = () => {
+const HomeCardSmall = () => {
   return (
-    <div className="flex flex-col w-[180px] xl:w-[280px] md:h-[350px]">
+    <div className="flex flex-col w-[180px] md:h-[300px]">
       <Link to="/detail/1">
         <img
-          src="./assets/coffee1.png"
+          src="../assets/coffee1.png"
           className="w-[100%] shadow-md rounded-md"
           alt="product"
         />
@@ -22,4 +22,4 @@ const HomeCard = () => {
   );
 };
 
-export default HomeCard;
+export default HomeCardSmall;
