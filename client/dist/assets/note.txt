@@ -1,0 +1,3 @@
+https://codepen.io/bzerangue/pen/ExaBMXj
+https://choc-ui.com/docs/elements/carousels
+https://www.material-tailwind.com/docs/react/carousel
