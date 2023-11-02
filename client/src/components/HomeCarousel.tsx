@@ -3,7 +3,7 @@ import { Carousel } from "@material-tailwind/react";
 const HomeCarousel = () => {
   return (
     <Carousel
-      className="absolute z-10 mt-[53px] rounded-xl w-[100%] h-[550px]"
+      className="absolute z-10 mt-[100px] md:mt-[53px] w-[100%] h-[560px]"
       autoplay={true}
       loop={true}
       navigation={({ setActiveIndex, activeIndex, length }) => (
@@ -12,7 +12,7 @@ const HomeCarousel = () => {
             <span
               key={i}
               className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
+                activeIndex === i ? "w-6 bg-[#e57905]" : "w-6 bg-white/50"
               }`}
               onClick={() => setActiveIndex(i)}
             />
