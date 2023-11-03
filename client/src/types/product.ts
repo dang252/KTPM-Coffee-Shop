@@ -10,7 +10,7 @@ export interface Product {
 }
 
 export interface CartProduct {
-  cart_id: number;
+  cart_id: string;
   product_id: number;
   name: string;
   description?: string;
