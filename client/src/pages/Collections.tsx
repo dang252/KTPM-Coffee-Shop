@@ -122,7 +122,7 @@ const Collections = () => {
           Bánh & Snack
         </Link>
         <Link
-          to="/collections/huong-thuc-tai-nha"
+          to="/collections/thuong-thuc-tai-nha"
           className={`hover:cursor-pointer ${
             category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
           }`}

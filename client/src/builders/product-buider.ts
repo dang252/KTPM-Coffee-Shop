@@ -3,6 +3,7 @@ import { Product } from "./product";
 interface IProductBuilder {
   product: Product;
   setId(id: number): this;
+  setCartId(id: string): this;
   setName(name: string): this;
   setDescription(des: string): this;
   setCategory(cate: string): this;
@@ -23,6 +24,11 @@ export default class ProductBuilder implements IProductBuilder {
 
   setId(id: number): this {
     this.product.id = id;
+    return this;
+  }
+
+  setCartId(id: string): this {
+    this.product.cart_id = id;
     return this;
   }
 

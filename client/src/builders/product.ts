@@ -1,5 +1,6 @@
 export class Product {
   id = 0;
+  cart_id = "";
   name = "";
   description = "";
   category = "";

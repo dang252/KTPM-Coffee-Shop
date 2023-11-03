@@ -8,6 +8,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -21,7 +23,7 @@ import { useDispatch } from "react-redux";
 import HomeCardSmall from "../components/HomeCardSmall";
 import ProductQuantity from "../components/ProductQuantity";
 
-import { CoffeeDirector } from "../builders/product-director";
+import { CoffeeCartDirector } from "../builders/product-director";
 
 const DetailProduct = () => {
   const dispath = useDispatch();
@@ -69,7 +71,10 @@ const DetailProduct = () => {
       const productName: string = name.toLocaleLowerCase();
 
       if (productName.includes("cloudfee")) {
-        const productBuider = CoffeeDirector.construct(
+        const id = uuidv4();
+
+        const productBuider = CoffeeCartDirector.construct(
+          id,
           1,
           "CloudFee Hạnh Nhân Nướng",
           quantity,
