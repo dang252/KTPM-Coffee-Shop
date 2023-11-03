@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 
-import { useDispatch } from "react-redux";
-
 interface PropType {
   cart_id: string;
+  price: number;
   quantity: number;
+  handleChangeQuantity: (
+    type: string,
+    cart_id: string,
+    showQuantity: number,
+    setShowQuantity: React.Dispatch<React.SetStateAction<number>>,
+    price: number
+  ) => void;
 }
 
 const OrderProductQuantity = (props: PropType) => {
-  const { cart_id, quantity } = props;
-
-  const dispath = useDispatch();
+  const { cart_id, price, quantity, handleChangeQuantity } = props;
 
   const [showQuantity, setShowQuantity] = useState<number>(1);
 
@@ -22,38 +26,6 @@ const OrderProductQuantity = (props: PropType) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChangeQuantity = (type: string, cart_id: string) => {
-    if (type === "increase") {
-      let newQuantity = showQuantity;
-      newQuantity++;
-
-      dispath({
-        type: "products/increaseProductToCart",
-        payload: {
-          cart_id: cart_id,
-          value: newQuantity,
-        },
-      });
-
-      setShowQuantity(newQuantity);
-    }
-
-    if (type === "decrease") {
-      let newQuantity = showQuantity;
-      newQuantity--;
-
-      dispath({
-        type: "products/decreaseProductToCart",
-        payload: {
-          cart_id: cart_id,
-          value: newQuantity,
-        },
-      });
-
-      setShowQuantity(newQuantity);
-    }
-  };
-
   return (
     <div className="flex items-center gap-5">
       <div
@@ -64,7 +36,13 @@ const OrderProductQuantity = (props: PropType) => {
         }`}
         onClick={() => {
           if (showQuantity !== undefined && showQuantity > 1) {
-            handleChangeQuantity("decrease", cart_id.toString());
+            handleChangeQuantity(
+              "decrease",
+              cart_id.toString(),
+              showQuantity,
+              setShowQuantity,
+              price
+            );
           }
         }}
       >
@@ -79,7 +57,13 @@ const OrderProductQuantity = (props: PropType) => {
         className="w-[35px] h-[35px] flex items-center bg-[#e57905] p-2 rounded-full hover:cursor-pointer"
         onClick={() => {
           if (showQuantity !== undefined) {
-            handleChangeQuantity("increase", cart_id.toString());
+            handleChangeQuantity(
+              "increase",
+              cart_id.toString(),
+              showQuantity,
+              setShowQuantity,
+              price
+            );
           }
         }}
       >

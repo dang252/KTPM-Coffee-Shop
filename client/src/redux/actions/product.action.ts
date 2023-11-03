@@ -15,3 +15,5 @@ export const increaseProductToCart = createAction<string>(
 export const decreaseProductToCart = createAction<string>(
   "products/decreaseProductToCart"
 );
+
+export const updateCart = createAction<string>("products/updateCart");

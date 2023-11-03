@@ -7,6 +7,7 @@ import {
   removeProductToCart,
   increaseProductToCart,
   decreaseProductToCart,
+  updateCart,
 } from "../actions/product.action";
 
 // Interface declair
@@ -38,20 +39,26 @@ const productReducer = createReducer(initialState, (builder) => {
       );
     })
     .addCase(increaseProductToCart, (state, action) => {
-      const { cart_id, value }: any = action.payload;
+      const { cart_id, quantity, price }: any = action.payload;
 
       for (let i = 0; i < state.cart.length; ++i) {
         if (state.cart[i].cart_id.toString() === cart_id)
-          state.cart[i].quantity = value;
+          state.cart[i].quantity = quantity;
+        state.cart[i].price = price;
       }
     })
     .addCase(decreaseProductToCart, (state, action) => {
-      const { cart_id, value }: any = action.payload;
+      const { cart_id, quantity, price }: any = action.payload;
 
       for (let i = 0; i < state.cart.length; ++i) {
         if (state.cart[i].cart_id.toString() === cart_id)
-          state.cart[i].quantity = value;
+          state.cart[i].quantity = quantity;
+        state.cart[i].price = price;
       }
+    })
+    .addCase(updateCart, (state, action) => {
+      const newCart: any = action.payload;
+      state.cart = newCart;
     });
 });
 
