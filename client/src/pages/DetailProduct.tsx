@@ -69,9 +69,13 @@ const DetailProduct = () => {
   }, [quantity]);
 
   const handleChooseSize = (type: string) => {
+    setQuantity(1);
+    setToppings([]);
+
     if (size === type) {
       setSize("");
       setPrize(initPrice);
+
       return;
     }
 
