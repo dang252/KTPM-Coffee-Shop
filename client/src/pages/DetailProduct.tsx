@@ -14,6 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Link, useNavigate } from "react-router-dom";
+import * as CurrencyFormat from "react-currency-format";
 
 // Reduc/redux-toolkit config import
 import { useDispatch } from "react-redux";
@@ -26,10 +27,15 @@ import ProductQuantity from "../components/ProductQuantity";
 import { CoffeeCartDirector } from "../builders/product-director";
 
 const DetailProduct = () => {
+  const initProductId = 1;
+  const initName = "CloudFee Hạnh Nhân Nướng";
+  const initPrice = 49.0;
+
   const dispath = useDispatch();
 
   const [name, setName] = useState<string>("");
   const [size, setSize] = useState<string>("");
+  const [price, setPrize] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [toppings, setToppings] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -38,19 +44,52 @@ const DetailProduct = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = "CloudFee Hạnh Nhân Nướng";
-    setName("CloudFee Hạnh Nhân Nướng");
+    document.title = initName;
+    setName(initName);
+    setPrize(initPrice);
   }, []);
 
+  const handleGetToppingPrice = (toppings: number[]): number => {
+    let count = 0;
+    for (let i = 0; i < toppings.length; ++i) {
+      // count += toppings[i].price
+      count += 10.0;
+    }
+    return count;
+  };
+
+  useEffect(() => {
+    if (size === "small")
+      setPrize(quantity * (initPrice + handleGetToppingPrice(toppings)));
+    if (size === "medium")
+      setPrize(quantity * (initPrice + 6.0 + handleGetToppingPrice(toppings)));
+    if (size === "large")
+      setPrize(quantity * (initPrice + 10.0 + handleGetToppingPrice(toppings)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quantity]);
+
   const handleChooseSize = (type: string) => {
-    if (size === type) setSize("");
-    else setSize(type);
+    if (size === type) {
+      setSize("");
+      setPrize(initPrice);
+      return;
+    }
+
+    setSize(type);
+    setPrize(initPrice);
+    if (type === "small") setPrize(initPrice);
+    if (type === "medium") setPrize(initPrice + 6.0);
+    if (type === "large") setPrize(initPrice + 10.0);
   };
 
   const handleAddTopping = (id: number) => {
-    if (toppings.includes(id))
+    if (toppings.includes(id)) {
       setToppings(toppings.filter((topping) => topping !== id));
-    else setToppings([...toppings, id]);
+      setPrize(price - 10.0);
+    } else {
+      setToppings([...toppings, id]);
+      setPrize(price + 10.0);
+    }
   };
 
   const handleOpen = () => setOpen(!open);
@@ -75,12 +114,12 @@ const DetailProduct = () => {
 
         const productBuider = CoffeeCartDirector.construct(
           id,
-          1,
-          "CloudFee Hạnh Nhân Nướng",
+          initProductId,
+          initName,
           quantity,
           size,
           toppings,
-          49.0
+          price
         );
 
         dispath({ type: "products/addProductToCart", payload: productBuider });
@@ -231,7 +270,7 @@ const DetailProduct = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3 mt-10 mb-10">
+            <div className="flex flex-col gap-3 mt-10">
               <p className="font-semibold">Topping</p>
               <div className="flex flex-wrap gap-5">
                 <div
@@ -273,7 +312,20 @@ const DetailProduct = () => {
               </div>
             </div>
             <div className="my-10">
+              <p className="font-semibold mb-3">Số lượng</p>
               <ProductQuantity quantity={quantity} setQuantity={setQuantity} />
+            </div>
+            <div className="my-10">
+              <p className="font-semibold mb-3">Thành tiền</p>
+              <p className="text-2xl font-bold text-[#e57905]">
+                <CurrencyFormat
+                  value={price}
+                  displayType={"text"}
+                  suffix={"VNĐ"}
+                  decimalScale={3}
+                  fixedDecimalScale={true}
+                />
+              </p>
             </div>
             <div
               className="flex gap-3 justify-center items-center text-white font-semibold p-3 rounded-md bg-[#e57905] hover:cursor-pointer"

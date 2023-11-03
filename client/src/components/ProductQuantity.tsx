@@ -13,7 +13,9 @@ const ProductQuantity = (props: PropType) => {
           quantity > 1 ? "bg-[#e57905]" : "bg-gray-400"
         }`}
         onClick={() => {
-          if (quantity > 1) setQuantity(quantity - 1);
+          if (quantity > 1) {
+            setQuantity(quantity - 1);
+          }
         }}
       >
         <img

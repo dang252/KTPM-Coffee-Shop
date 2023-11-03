@@ -9,6 +9,7 @@ import { RootState } from "../redux/store";
 import OrderProductQuantity from "./OrderProductQuantity";
 
 import { CartProduct } from "../types/product";
+import { Link } from "react-router-dom";
 
 const TABLE_HEAD = [
   "Tên sản phẩm",
@@ -54,7 +55,10 @@ const OrderTable = () => {
           </thead>
           <tbody>
             {cart?.map(
-              ({ cart_id, name, size, quantity, topping, price }, index) => {
+              (
+                { cart_id, product_id, name, size, quantity, topping, price },
+                index
+              ) => {
                 const id = uuidv4();
 
                 const isLast = index === cart?.length - 1;
@@ -74,13 +78,15 @@ const OrderTable = () => {
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <div className="w-[100px]">
-                        <img
-                          className="w-[100%]"
-                          src="../assets/coffee1.png"
-                          alt="image"
-                        />
-                      </div>
+                      <Link to={`/product/${product_id}`}>
+                        <div className="w-[100px]">
+                          <img
+                            className="w-[100%]"
+                            src="../assets/coffee1.png"
+                            alt="image"
+                          />
+                        </div>
+                      </Link>
                     </td>
                     <td className={classes}>
                       <Typography
