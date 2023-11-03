@@ -13,19 +13,22 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { Product } from "../types/product";
-
 // Reduc/redux-toolkit config import
 import { useDispatch } from "react-redux";
 // import { useAppDispatch } from "../redux/hooks";
 // import { RootState } from "../redux/store";
 
 import HomeCardSmall from "../components/HomeCardSmall";
+import ProductQuantity from "../components/ProductQuantity";
+
+import { CoffeeDirector } from "../builders/product-director";
 
 const DetailProduct = () => {
   const dispath = useDispatch();
 
+  const [name, setName] = useState<string>("");
   const [size, setSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
   const [toppings, setToppings] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -34,6 +37,7 @@ const DetailProduct = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "CloudFee Hạnh Nhân Nướng";
+    setName("CloudFee Hạnh Nhân Nướng");
   }, []);
 
   const handleChooseSize = (type: string) => {
@@ -53,17 +57,34 @@ const DetailProduct = () => {
     if (size === "") {
       toast.error("Vui lòng chọn size!");
     } else {
-      const product: Product = {
-        id: 1,
-        name: "CloudFee Hạnh Nhân Nướng",
-        price: 49.0,
-        size: size,
-        topping: toppings,
-        quantity: 1,
-      };
+      // const product: Product = {
+      //   id: 1,
+      //   name: "CloudFee Hạnh Nhân Nướng",
+      //   price: 49.0,
+      //   size: size,
+      //   topping: toppings,
+      //   quantity: quantity,
+      // };
 
-      dispath({ type: "products/addProductToCart", payload: product });
-      handleOpen();
+      const productName: string = name.toLocaleLowerCase();
+
+      if (productName.includes("cloudfee")) {
+        const productBuider = CoffeeDirector.construct(
+          1,
+          "CloudFee Hạnh Nhân Nướng",
+          quantity,
+          size,
+          toppings,
+          49.0
+        );
+
+        dispath({ type: "products/addProductToCart", payload: productBuider });
+        handleOpen();
+      }
+
+      setSize("");
+      setToppings([]);
+      setQuantity(1);
     }
   };
 
@@ -88,12 +109,7 @@ const DetailProduct = () => {
           lựa chọn sản phẩm khác
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="gradient"
-            color="blue"
-            onClick={handleOpen}
-            className="mr-1"
-          >
+          <Button variant="gradient" onClick={handleOpen} className="mr-1">
             <span>Tiếp tục chọn sản phẩm</span>
           </Button>
           <Button
@@ -130,11 +146,11 @@ const DetailProduct = () => {
           </div>
           <div className="w-[100%] md:w-[50%] mt-10 md:mt-0">
             <div className="flex flex-col gap-3">
-              <p className="font-bold text-2xl">CloudFee Hạnh Nhân Nướng</p>
+              <p className="font-bold text-2xl">{name}</p>
               <p className="font-bold text-2xl text-[#e57905]">49.000 đ</p>
             </div>
             <div className="flex flex-col gap-3 mt-8">
-              <p className="font-semibold mb-3">Chọn size (bắt buộc)</p>
+              <p className="font-semibold">Chọn size (bắt buộc)</p>
               <div className="flex flex-wrap gap-5">
                 <div
                   className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${
@@ -210,8 +226,8 @@ const DetailProduct = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3 mt-8 mb-8">
-              <p className="font-semibold mb-3">Topping</p>
+            <div className="flex flex-col gap-3 mt-10 mb-10">
+              <p className="font-semibold">Topping</p>
               <div className="flex flex-wrap gap-5">
                 <div
                   className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${
@@ -250,6 +266,9 @@ const DetailProduct = () => {
                   <p className="text-sm">Kem châu trắng + 10.000 đ</p>
                 </div>
               </div>
+            </div>
+            <div className="my-10">
+              <ProductQuantity quantity={quantity} setQuantity={setQuantity} />
             </div>
             <div
               className="flex gap-3 justify-center items-center text-white font-semibold p-3 rounded-md bg-[#e57905] hover:cursor-pointer"
