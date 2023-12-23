@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './entities/user.entity';
-import { LoginResponse, jwtResponse, loginRequest } from './dto/user.dto';
+import { loginResponse, jwtResponse, loginRequest, refreshRequest, logoutRequest } from './dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -21,7 +21,8 @@ export class UsersService {
 
     // Hash data by bcrypt lib
     hashData(data: string) {
-        return bcrypt.hash(data, 10);
+        data.slice(data.length - 10, data.length - 1)
+        return bcrypt.hash(data.slice(data.length - 10, data.length - 1), 10);
     }
 
     // Hash the refresh token and save to database
@@ -71,7 +72,8 @@ export class UsersService {
         return this.usersRepository.findOneBy({ email: email })
     }
 
-    async register(user: Users): Promise<LoginResponse> {
+    //[POST]: /users/register 
+    async register(user: Users): Promise<loginResponse> {
         try {
             const isEmailExists = (await this.findUserByEmail(user.email) != null)
             const isUsernameExists = (await this.findUserByUsername(user.username) != null)
@@ -82,7 +84,7 @@ export class UsersService {
                 await this.usersRepository.save(user);
                 //create response
                 const tokens = await this.getTokens(user.userId, user.username)
-                const response = new LoginResponse()
+                const response = new loginResponse()
                 response.userId = user.userId;
                 response.username = user.username;
                 response.accessToken = tokens.accessToken
@@ -102,8 +104,8 @@ export class UsersService {
             }
         }
     }
-
-    async login(req: loginRequest): Promise<LoginResponse> {
+    //[POST]: /users/login 
+    async login(req: loginRequest): Promise<loginResponse> {
         try {
             const user = await this.findUserByUsername(req.username)
             if (!user || !(await bcrypt.compare(req.password, user.password))) {
@@ -111,7 +113,51 @@ export class UsersService {
             }
             //create response
             const tokens = await this.getTokens(user.userId, user.username)
-            const response = new LoginResponse()
+            const response = new loginResponse()
+            response.userId = user.userId;
+            response.username = user.username;
+            response.accessToken = tokens.accessToken
+            response.refreshToken = tokens.refreshToken
+            await this.hashRefreshToken(response.userId, response.refreshToken)
+            return response;
+        }
+        catch (error) {
+            if (error instanceof HttpException) {
+                throw error
+            } else {
+                throw new HttpException('INTERNAL SERVER ERROR', HttpStatus.INTERNAL_SERVER_ERROR)
+            }
+        }
+    }
+    //
+    async logout(req: logoutRequest) {
+        try {
+            const user = await this.findUserById(req.userId);
+            if (!user) {
+                throw new HttpException('INVALID REQUEST', HttpStatus.BAD_REQUEST)
+            }
+            user.refreshToken = ''
+            await this.usersRepository.save(user)
+            return "SUCCESS"
+        }
+        catch (error) {
+            if (error instanceof HttpException) {
+                throw error
+            } else {
+                throw new HttpException('INTERNAL SERVER ERROR', HttpStatus.INTERNAL_SERVER_ERROR)
+            }
+        }
+    }
+    //[POST] /users/refresh
+    async refresh(req: refreshRequest): Promise<loginResponse> {
+        try {
+            const user = await this.findUserById(req.userId);
+            if (!user || !(await bcrypt.compare(req.refreshToken.slice(req.refreshToken.length - 10, req.refreshToken.length - 1), user.refreshToken))) {
+                throw new HttpException('INVALID REQUEST', HttpStatus.BAD_REQUEST)
+            }
+            //create response
+            const tokens = await this.getTokens(user.userId, user.username)
+            const response = new loginResponse()
             response.userId = user.userId;
             response.username = user.username;
             response.accessToken = tokens.accessToken
