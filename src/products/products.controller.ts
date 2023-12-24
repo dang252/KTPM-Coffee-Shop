@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Products } from './entities/product.entity';
 import { ProductDetailDto } from './dto/product.dto';
@@ -14,7 +14,15 @@ export class ProductsController {
 
     @Get("/:productId")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async findProductById(@Param() params: any): Promise<ProductDetailDto> {
+    async getProductById(@Param() params: any): Promise<ProductDetailDto> {
         return this.productsService.getProductDetails(params.productId)
     }
+
+    @Get()
+    async getProductByCategories(@Query('categories') categories: string) {
+        const categoriesArray = categories.split(' ')
+        return this.productsService.getProductByCategories(categoriesArray);
+    }
+
+
 }

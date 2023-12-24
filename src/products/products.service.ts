@@ -46,7 +46,17 @@ export class ProductsService {
         return res;
     }
 
+    async getProductByCategories(categories: string[]): Promise<Products[]> {
+        const query = `
+            SELECT *
+            FROM products
+            WHERE categories @> $1::character varying[]
+        `;
 
+        const result = await this.productRepository.query(query, [categories]);
+        const sortedProducts = result.sort((a, b) => a.productId - b.productId);
+        return sortedProducts;
+    }
 
     //create seed data
     async createSeedData() {
@@ -124,7 +134,7 @@ export class ProductsService {
                     'Cà Phê Đen Đá hoà tan The Coffee House với 100 % hạt cà phê Robusta mang đến hương vị mạnh cực bốc, đậm đắng đầy lôi cuốn, đúng gu người Việt.',
                 productPrice: 39000,
                 upsize: [],
-                categories: ['coffee', 'product'],
+                categories: ['coffee', 'packed'],
             },
         ]
         const productstopping = [
