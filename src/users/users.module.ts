@@ -12,6 +12,7 @@ dotenv.config();
 @Module({
   imports: [TypeOrmModule.forFeature([Users]), JwtModule.register({})],
   controllers: [UsersController],
-  providers: [UsersService, AccessTokenStrategy, RefreshTokenStrategy]
+  providers: [UsersService, AccessTokenStrategy, RefreshTokenStrategy],
+  exports: [UsersService],
 })
 export class UsersModule { }

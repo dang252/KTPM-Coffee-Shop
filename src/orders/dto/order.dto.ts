@@ -52,6 +52,8 @@ export class getOrderResponse {
 
     shippingInfoFee: number;
 
+    status: string;
+
     details: OrderDetailResponse[];
 }
 

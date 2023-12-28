@@ -1,7 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { OrdersService } from './orders.service';
-import { createOrderRequest } from './dto/order.dto';
+import { createOrderRequest, getOrderResponse } from './dto/order.dto';
 
 
 @Controller('orders')
@@ -12,5 +12,9 @@ export class OrdersController {
   async createOrder(@Body() req: createOrderRequest) {
     return this.ordersService.createNewOrder(req);
   }
-
+  @Get("/:orderId")
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getOrderById(@Param() params: any): Promise<getOrderResponse> {
+    return this.ordersService.getOrderById(params.orderId)
+  }
 }
