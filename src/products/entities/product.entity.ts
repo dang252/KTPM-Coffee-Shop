@@ -14,7 +14,7 @@ export class Products {
     @Column()
     productPrice: number;
 
-    @Column('bigint', { array: true, default: [] })
+    @Column('integer', { array: true, default: [] })
     upsize: number[];
 
     @Column('varchar', { array: true, default: [] })
