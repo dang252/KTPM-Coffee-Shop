@@ -7,6 +7,7 @@ import { ProductsModule } from './products/products.module';
 // import { dataSourceOptions } from 'db/dataSource';
 // import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
+import { PromotionModule } from './promotion/promotion.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     ProductsModule,
     OrdersModule,
+    PromotionModule,
   ],
   controllers: [AppController],
   providers: [AppService,],
