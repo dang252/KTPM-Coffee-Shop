@@ -8,6 +8,7 @@ export interface Product {
   size?: string;
   topping?: number[];
   url?: string;
+  image?: string;
 }
 
 export interface CartProduct {
@@ -20,4 +21,5 @@ export interface CartProduct {
   price: number;
   size?: string;
   topping?: number[];
+  image?: string;
 }

@@ -45,14 +45,15 @@ export const getProductsByCategories = createAsyncThunk(
     try {
       let queryString = "";
       for (let i = 0; i < params.length; i++) {
-        queryString += queryString == "" ? params[i] : "+" + params[i]
+        queryString += queryString == "" ? params[i] : "+" + params[i];
       }
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/`, {
-        params: {
-          "categories": queryString,
+        `${import.meta.env.VITE_API_URL}/products/`,
+        {
+          params: {
+            categories: queryString,
+          },
         }
-      }
       );
 
       return response.data;
@@ -67,16 +68,17 @@ export const getProductDetail = createAsyncThunk(
   "products/getDetail",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  async (req: { productId: number, userId?: number }, thunkAPI) => {
+  async (req: { productId: number; userId?: number }, thunkAPI) => {
     try {
-      let query = ""
+      let query = "";
       if (req.userId) {
-        query = `?userId=${req.userId}`
+        query = `?userId=${req.userId}`;
       }
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/detail/${req.productId + query}`, {
-
-      }
+        `${import.meta.env.VITE_API_URL}/products/detail/${
+          req.productId + query
+        }`,
+        {}
       );
       return response.data;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,17 +87,18 @@ export const getProductDetail = createAsyncThunk(
     }
   }
 );
-
 
 export const followProduct = createAsyncThunk(
   "products/follow",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  async (req: { productId: number, userId: number }, thunkAPI) => {
+  async (req: { productId: number; userId: number }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/follow?productId=${req.productId}&userId=${req.userId}`, {
-      }
+        `${import.meta.env.VITE_API_URL}/products/follow?productId=${
+          req.productId
+        }&userId=${req.userId}`,
+        {}
       );
       return response.data;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,19 +107,78 @@ export const followProduct = createAsyncThunk(
     }
   }
 );
-// createAsyncThunk middleware
+
+export const cartConfirm = createAsyncThunk(
+  "products/cartConfirm",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (cart: any, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/orders/create`,
+        {
+          userId: cart.userId,
+          shippingInfoAddress: cart.shippingInfoAddress,
+          shippingInfoPhone: cart.shippingInfoPhone,
+          shippingInfoFee: 0,
+          detail: cart.detail,
+        }
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getDetailBill = createAsyncThunk(
+  "products/getDetailBill",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (orderId: number, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/orders/${orderId}`,
+        {}
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getUserBillHistory = createAsyncThunk(
+  "products/getUserBillHistory",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (userId: number, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/orders/history?userId=${userId}`,
+        {}
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const productReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(getProductsByCategories.fulfilled, (state, action) => {
-      state.productList = action.payload
+      state.productList = action.payload;
     })
     .addCase(getProductsByCategories.rejected, (state, _) => {
-      state.productList = []
+      state.productList = [];
     })
     .addCase(addProductToCart, (state, action) => {
       const product: any = action.payload;
-      console.log(product)
+      console.log(product);
       state.cart.push(product);
     })
     .addCase(removeProductToCart, (state, action) => {

@@ -8,6 +8,7 @@ export class Product {
   price = 0;
   size = "";
   topping = [0];
+  image = "";
 
   construction(): Product {
     return new Product();

@@ -11,6 +11,7 @@ interface IProductBuilder {
   setPrice(price: number): this;
   setSize(size: string): this;
   setTopping(toppings: number[]): this;
+  setImage(image: string): this;
 
   build(): Product;
 }
@@ -64,6 +65,11 @@ export default class ProductBuilder implements IProductBuilder {
 
   setTopping(toppings: number[]): this {
     this.product.topping = toppings;
+    return this;
+  }
+
+  setImage(image: string): this {
+    this.product.image = image;
     return this;
   }
 

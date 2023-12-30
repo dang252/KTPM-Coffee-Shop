@@ -15,11 +15,11 @@ import { SocketModule } from './socket/socket.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: "localhost",
+      host: 'localhost',
       port: +5432,
-      username: "postgres",
-      password: "123456",
-      database: "KTPM-coffee-shop",
+      username: 'postgres',
+      password: '123',
+      database: 'thecoffeehouse',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       // migrations: [__dirname + '/dist/db/migration/*{.ts,.js}'],
       synchronize: true,
@@ -29,9 +29,9 @@ import { SocketModule } from './socket/socket.module';
     OrdersModule,
     PromotionModule,
     NotifyModule,
-    SocketModule
+    SocketModule,
   ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

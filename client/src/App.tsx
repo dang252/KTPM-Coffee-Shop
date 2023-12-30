@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Order from "./pages/Order";
 import "./App.css";
+
 import { axiosAuthRequest, axiosAuthResponse } from "./config/axios";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
@@ -10,6 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { useSocket } from "./hooks/useSocket";
 import { SendHandshake, StartListeners } from "./helpers/socket";
+
+import Home from "./pages/Home";
+import Order from "./pages/Order";
+import Bill from "./pages/Bill";
+import History from "./pages/History";
 
 const App = () => {
   axiosAuthRequest;
@@ -37,7 +41,7 @@ const App = () => {
       // Send event to socket
       SendHandshake(socket, username, id);
     }
-  }, [dispatch, id, socket, username])
+  }, [dispatch, id, socket, username]);
 
   return (
     <>
@@ -56,6 +60,8 @@ const App = () => {
       <Routes>
         <Route path="*" element={<Home />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/bill/:orderId" element={<Bill />} />
+        <Route path="/history/:userId" element={<History />} />
       </Routes>
     </>
   );

@@ -5,6 +5,7 @@ import { useAppDispatch } from "../redux/hooks/hooks";
 import { toast } from "react-toastify";
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 const HomeContent = () => {
   const dispathAsync = useAppDispatch();
@@ -12,19 +13,17 @@ const HomeContent = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        await dispathAsync(getProductsByCategories(["bestseller"]))
+        await dispathAsync(getProductsByCategories(["bestseller"]));
         // console.log("data", data)
         // console.log("payload", data.payload)
         // setProducts(data?.payload)
-      }
-      catch (error: any) {
-        console.log(error)
+      } catch (error: any) {
+        console.log(error);
         toast.error("Can't get products try again later!");
       }
-    }
-    getProducts()
-
-  }, [dispathAsync])
+    };
+    getProducts();
+  }, [dispathAsync]);
   const products = useSelector<RootState, any>(
     (state) => state.product.productList
   );
@@ -39,9 +38,12 @@ const HomeContent = () => {
       <div className="w-[100%] md:w-[600px] md:h-[350px] flex">
         <img src="./assets/content1.png" className="w-[100%] rounded-md" />
       </div>
-      {products && products.map((product: any) => {
-        return <HomeCard product={product} />
-      })}
+      {products &&
+        products.map((product: any) => {
+          const uid = uuidv4();
+
+          return <HomeCard key={uid} product={product} />;
+        })}
     </div>
   );
 };

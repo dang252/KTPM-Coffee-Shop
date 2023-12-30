@@ -9,7 +9,8 @@ export class CoffeeDirector {
     quantity: number,
     size: string,
     toppings: number[],
-    price: number
+    price: number,
+    image: string
   ): Product {
     return new ProductBuilder()
       .setCategory("coffee")
@@ -19,6 +20,7 @@ export class CoffeeDirector {
       .setSize(size)
       .setTopping(toppings)
       .setPrice(price)
+      .setImage(image)
       .build();
   }
 }
@@ -31,7 +33,8 @@ export class CoffeeCartDirector {
     quantity: number,
     size: string,
     toppings: number[],
-    price: number
+    price: number,
+    image: string
   ): Product {
     return new ProductBuilder()
       .setCategory("coffee")
@@ -42,6 +45,7 @@ export class CoffeeCartDirector {
       .setSize(size)
       .setTopping(toppings)
       .setPrice(price)
+      .setImage(image)
       .build();
   }
 }
@@ -53,7 +57,8 @@ export class TeaDirector {
     quantity: number,
     size: string,
     toppings: number[],
-    price: number
+    price: number,
+    image: string
   ): Product {
     return new ProductBuilder()
       .setCategory("tea")
@@ -63,6 +68,7 @@ export class TeaDirector {
       .setSize(size)
       .setTopping(toppings)
       .setPrice(price)
+      .setImage(image)
       .build();
   }
 }
