@@ -16,7 +16,6 @@ import {
   updateCart,
 } from "../actions/product.action";
 import axios from "axios";
-import { Query } from "typeorm/driver/Query.js";
 
 // Interface declair
 interface ProductState {

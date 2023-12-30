@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
 
 export class Promotion {
     @PrimaryGeneratedColumn()
-    promotionId: string;
+    promotionId: number;
 
     @Column()
     promotionName: string;
@@ -35,3 +35,20 @@ export class CategoryPromotion extends Promotion {
     categories: string[];
 }
 
+@Entity()
+export class Message {
+    @PrimaryGeneratedColumn()
+    messageId: number
+
+    @Column()
+    userId: number
+
+    @Column()
+    messageInfo: string
+
+    @Column()
+    promotionId: number
+
+    @Column()
+    status: string
+}

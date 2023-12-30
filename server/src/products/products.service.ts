@@ -73,6 +73,10 @@ export class ProductsService {
         return res;
     }
 
+    async findFollowerByProductId(productId: number) {
+        return (await this.followerListRepository.findOneBy({ productId: productId })).userIds
+    }
+
     async getProductByCategories(categories: string[]): Promise<ProductsResponse[]> {
         const query = `
             SELECT *

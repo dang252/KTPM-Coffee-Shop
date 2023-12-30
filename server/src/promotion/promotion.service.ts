@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { createPromotionRequest } from './dto/promotion.dto';
-import { CategoryPromotion, ProductPromotion } from './entities/promotion.entity';
-import { DataSource, Repository } from 'typeorm';
+import { CategoryPromotion, Message, ProductPromotion } from './entities/promotion.entity';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProductsService } from 'src/products/products.service';
 
 @Injectable()
 export class PromotionService {
@@ -11,7 +12,10 @@ export class PromotionService {
     private productPromotionRepository: Repository<ProductPromotion>,
     @InjectRepository(CategoryPromotion)
     private categoryPromotionRepository: Repository<CategoryPromotion>,
-    private dataSource: DataSource,
+    @InjectRepository(Message)
+    private messageRepository: Repository<Message>,
+    @Inject(ProductsService)
+    private readonly productsService: ProductsService,
   ) { }
 
   findAll() {
@@ -27,7 +31,26 @@ export class PromotionService {
     }
   }
 
-  async createProductPromotion(req: createPromotionRequest, repo: Repository<ProductPromotion>) {
+  createMessage = async (req: createPromotionRequest) => {
+    console.log("create message")
+    let receivedUser = []
+    for (let i = 0; i < req.productIds.length; i++) {
+      const users = await this.productsService.findFollowerByProductId(req.productIds[i]);
+      if (users) {
+        receivedUser = receivedUser.concat(users);
+      }
+    }
+    for (let i = 0; i < receivedUser.length; i++) {
+      const newMessage = new Message;
+      {
+        newMessage.userId = receivedUser[i]
+        newMessage.status = "PENDING"
+        newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
+      }
+    }
+  }
+
+  async createProductPromotion(req: createPromotionRequest, repo: Repository<ProductPromotion>, msgRepo: Repository<Message>, productsService: ProductsService) {
     try {
       console.log("createProductPromotion", req)
       const newPromotion = new ProductPromotion;
@@ -39,9 +62,26 @@ export class PromotionService {
         newPromotion.endDate = new Date(req.endDate)
         newPromotion.productIds = req.productIds;
       }
-      console.log("newPromotion", newPromotion)
       await repo.save(newPromotion)
-      console.log(this.productPromotionRepository)
+      console.log("create message")
+      let receivedUser = []
+      for (let i = 0; i < req.productIds.length; i++) {
+        const users = await productsService.findFollowerByProductId(req.productIds[i]);
+        if (users) {
+          receivedUser = receivedUser.concat(users);
+        }
+      }
+      receivedUser = [...new Set(receivedUser)]
+      for (let i = 0; i < receivedUser.length; i++) {
+        const newMessage = new Message;
+        {
+          newMessage.userId = receivedUser[i]
+          newMessage.status = "PENDING"
+          newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
+          newMessage.promotionId = newPromotion.promotionId
+        }
+        msgRepo.save(newMessage)
+      }
       return newPromotion
     }
     catch (error) {
@@ -90,6 +130,7 @@ export class PromotionService {
   }
   async createPromotion(req: createPromotionRequest) {
     console.log(req)
-    return this.mapTypePromotion2Action[req.promotionType](req, this.mapTypePromotion2Repo[req.promotionType]);
+    return this.mapTypePromotion2Action[req.promotionType](req, this.mapTypePromotion2Repo[req.promotionType], this.messageRepository, this.productsService);
+    // this.createMessage(req)
   }
 }
