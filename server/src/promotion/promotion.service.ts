@@ -4,6 +4,7 @@ import { CategoryPromotion, Message, ProductPromotion } from './entities/promoti
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductsService } from 'src/products/products.service';
+import { SocketGateway } from 'src/socket/socket.gateway';
 
 @Injectable()
 export class PromotionService {
@@ -16,6 +17,10 @@ export class PromotionService {
     private messageRepository: Repository<Message>,
     @Inject(ProductsService)
     private readonly productsService: ProductsService,
+    // @Inject(forwardRef(() => SocketService))
+    // private readonly socketService: SocketService,
+    // @Inject(forwardRef(() => SocketGateway))
+    private readonly socketGateway: SocketGateway
   ) { }
 
   findAll() {
@@ -31,26 +36,20 @@ export class PromotionService {
     }
   }
 
-  createMessage = async (req: createPromotionRequest) => {
-    console.log("create message")
-    let receivedUser = []
-    for (let i = 0; i < req.productIds.length; i++) {
-      const users = await this.productsService.findFollowerByProductId(req.productIds[i]);
-      if (users) {
-        receivedUser = receivedUser.concat(users);
-      }
-    }
-    for (let i = 0; i < receivedUser.length; i++) {
-      const newMessage = new Message;
-      {
-        newMessage.userId = receivedUser[i]
-        newMessage.status = "PENDING"
-        newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
-      }
-    }
-  }
+  // async findPendignMessageOfUserId(userId: number) {
+  //   return this.messageRepository.findBy({
+  //     userId: userId,
+  //     status: "PENDING"
+  //   })
+  // }
 
-  async createProductPromotion(req: createPromotionRequest, repo: Repository<ProductPromotion>, msgRepo: Repository<Message>, productsService: ProductsService) {
+  // async updateMessageStatusById(messageId: number, status: string) {
+  //   const message = await this.messageRepository.findOneBy({ messageId: messageId })
+  //   message.status = status;
+  //   this.messageRepository.save(message)
+  // }
+
+  async createProductPromotion(req: createPromotionRequest, repo: Repository<ProductPromotion>, msgRepo: Repository<Message>, productsService: ProductsService, socketGateway: SocketGateway) {
     try {
       console.log("createProductPromotion", req)
       const newPromotion = new ProductPromotion;
@@ -79,6 +78,16 @@ export class PromotionService {
           newMessage.status = "PENDING"
           newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
           newMessage.promotionId = newPromotion.promotionId
+        }
+        msgRepo.save(newMessage)
+        const canSendNoti = socketGateway.sendNotification({
+          userId: newMessage.userId,
+          message: newMessage.messageInfo,
+          type: 'promotion',
+          createdAt: newMessage.createdAt,
+        })
+        if (canSendNoti) {
+          newMessage.status = "SENDED"
         }
         msgRepo.save(newMessage)
       }
@@ -130,7 +139,7 @@ export class PromotionService {
   }
   async createPromotion(req: createPromotionRequest) {
     console.log(req)
-    return this.mapTypePromotion2Action[req.promotionType](req, this.mapTypePromotion2Repo[req.promotionType], this.messageRepository, this.productsService);
+    return this.mapTypePromotion2Action[req.promotionType](req, this.mapTypePromotion2Repo[req.promotionType], this.messageRepository, this.productsService, this.socketGateway);
     // this.createMessage(req)
   }
 }

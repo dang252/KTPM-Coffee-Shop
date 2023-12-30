@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { NotifyModule } from './notify/notify.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NotifyModule } from './notify/notify.module';
     OrdersModule,
     PromotionModule,
     NotifyModule,
+    SocketModule
   ],
   controllers: [AppController],
   providers: [AppService,],
