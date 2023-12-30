@@ -1,14 +1,13 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { Products } from './entities/product.entity';
-import { ProductDetailDto } from './dto/product.dto';
+import { ProductDetailDto, ProductsResponse } from './dto/product.dto';
 
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) { }
 
     @Get("/all")
-    async findAllProduct(): Promise<Products[]> {
+    async findAllProduct(): Promise<ProductsResponse[]> {
         return this.productsService.findAllProduct();
     }
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Products, Topping, ToppingForProduct } from './entities/product.entity';
+import { ProductImages, Products, Topping, ToppingForProduct } from './entities/product.entity';
 import { In, Repository } from 'typeorm';
-import { ProductDetailDto } from './dto/product.dto';
+import { ProductDetailDto, ProductsResponse } from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -13,11 +13,24 @@ export class ProductsService {
         private toppingRepository: Repository<Topping>,
         @InjectRepository(ToppingForProduct)
         private toppingForProductRepository: Repository<ToppingForProduct>,
+        @InjectRepository(ProductImages)
+        private productImagesRepository: Repository<ProductImages>,
     ) {
         this.createSeedData()
     }
-    async findAllProduct(): Promise<Products[]> {
-        return this.productRepository.find();
+    async findAllProduct(): Promise<ProductsResponse[]> {
+        const products = await this.productRepository.find();
+        const res: ProductsResponse[] = []
+        for (let i = 0; i < products.length; i++) {
+            const newProduct = new ProductsResponse;
+            {
+                newProduct.product = products[i];
+                newProduct.productImage = (await this.productImagesRepository.findOneBy({ productId: products[i].productId })).url
+            }
+            res.push(newProduct)
+        }
+        return res
+
     }
 
     async findProductById(id: number): Promise<Products> {
@@ -41,21 +54,31 @@ export class ProductsService {
     async getProductDetails(productId: number): Promise<ProductDetailDto> {
         const res = new ProductDetailDto();
         res.product = await this.findProductById(productId)
+        res.productImages = await this.productImagesRepository.findBy({ productId: productId })
         const toppingForProduct = await this.findToppingIdsByProductId(productId);
         res.toppingList = toppingForProduct ? [...await this.findToppingsByIds(toppingForProduct.toppingIds)] : []
         return res;
     }
 
-    async getProductByCategories(categories: string[]): Promise<Products[]> {
+    async getProductByCategories(categories: string[]): Promise<ProductsResponse[]> {
         const query = `
             SELECT *
             FROM products
             WHERE categories @> $1::character varying[]
         `;
 
-        const result = await this.productRepository.query(query, [categories]);
-        const sortedProducts = result.sort((a, b) => a.productId - b.productId);
-        return sortedProducts;
+        const products = await this.productRepository.query(query, [categories]);
+        const sortedProducts = products.sort((a, b) => a.productId - b.productId);
+        const res: ProductsResponse[] = []
+        for (let i = 0; i < sortedProducts.length; i++) {
+            const newProduct = new ProductsResponse;
+            {
+                newProduct.product = sortedProducts[i];
+                newProduct.productImage = (await this.productImagesRepository.findOneBy({ productId: sortedProducts[i].productId })).url
+            }
+            res.push(newProduct)
+        }
+        return res
     }
 
     //create seed data
@@ -155,9 +178,41 @@ export class ProductsService {
                 toppingIds: [2, 6, 7, 8, 9]
             }
         ]
+
+        const productImages = [
+            {
+                productId: 1,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877612/KTPM-coffee-shop/1_bc4awi.webp"
+            },
+            {
+                productId: 2,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/2_vfqepi.webp"
+            },
+            {
+                productId: 3,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/3_uhudke.webp"
+            },
+            {
+                productId: 4,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/4_k0v0bb.webp"
+            },
+            {
+                productId: 5,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/5_lbeq6u.webp"
+            },
+            {
+                productId: 6,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/6_dectpj.webp"
+            },
+            {
+                productId: 7,
+                url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/7_oszvj8.webp"
+            },
+        ]
         await this.toppingRepository.save(toppings);
         await this.productRepository.save(products);
         await this.toppingForProductRepository.save(productstopping);
+        await this.productImagesRepository.save(productImages)
     }
 
 }

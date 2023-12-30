@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Products, Topping } from "../entities/product.entity";
+import { ProductImages, Products, Topping } from "../entities/product.entity";
 
 export class ProductDto {
     @IsNotEmpty()
@@ -39,8 +39,14 @@ export class ToppingDto {
     toppingPrice: number;
 }
 
+export class ProductsResponse {
+    product: Products;
+    productImage: string;
+}
+
 export class ProductDetailDto {
     product: Products;
+    productImages: ProductImages[];
     toppingList?: Topping[];
 }
 

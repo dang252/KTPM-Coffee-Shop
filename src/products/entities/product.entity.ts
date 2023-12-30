@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Products {
@@ -35,15 +35,6 @@ export class Topping {
 
 }
 
-// @Entity()
-// export class Category {
-//     @PrimaryGeneratedColumn()
-//     categoryId: number;
-
-//     @Column()
-//     categoryName: string;
-// }
-
 @Entity()
 export class ToppingForProduct {
     @PrimaryColumn()
@@ -51,4 +42,16 @@ export class ToppingForProduct {
 
     @Column('int', { array: true })
     toppingIds: number[];
+}
+
+@Entity()
+export class ProductImages {
+    @PrimaryGeneratedColumn()
+    imageId: number;
+
+    @Column()
+    productId: number;
+
+    @Column()
+    url: string;
 }
