@@ -4,17 +4,19 @@ import { getProductsByCategories } from "../redux/reducers/product.reducer";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { toast } from "react-toastify";
 import { Product } from "../types/product";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const HomeContent = () => {
   const dispathAsync = useAppDispatch();
-  const [products, setProducts] = useState<any>([]);
+  // const [products, setProducts] = useState<any>([]);
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const data = await dispathAsync(getProductsByCategories(["bestseller"]))
+        await dispathAsync(getProductsByCategories(["bestseller"]))
         // console.log("data", data)
         // console.log("payload", data.payload)
-        setProducts(data?.payload)
+        // setProducts(data?.payload)
       }
       catch (error: any) {
         console.log(error)
@@ -24,9 +26,12 @@ const HomeContent = () => {
     getProducts()
 
   }, [dispathAsync])
-  useEffect(() => {
-    console.log(products)
-  }, [products])
+  const products = useSelector<RootState, any>(
+    (state) => state.product.productList
+  );
+  // useEffect(() => {
+  //   console.log(products)
+  // }, [products])
   return (
     <div
       className="w-[95%] mx-auto mt-[350px] md:mt-[630px] mb-[100px] flex justify-center flex-wrap gap-10 
@@ -35,7 +40,7 @@ const HomeContent = () => {
       <div className="w-[100%] md:w-[600px] md:h-[350px] flex">
         <img src="./assets/content1.png" className="w-[100%] rounded-md" />
       </div>
-      {products && products.map((product: Product) => {
+      {products && products.map((product: any) => {
         return <HomeCard product={product} />
       })}
     </div>

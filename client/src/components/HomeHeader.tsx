@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { logoutAccount } from "../redux/reducers/user.reducer";
 import { useAppDispatch } from "../redux/hooks/hooks";
+import { toast } from "react-toastify";
 
 const HomeHeader = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
@@ -17,9 +18,19 @@ const HomeHeader = () => {
     (state) => state.persisted.users.username
   );
   const id = useSelector<RootState, number>(
-    (state) => state.persisted.users.id
+    (state) => state.persisted.users.userId
   );
   const dispathAsync = useAppDispatch()
+
+  const logout = async (id: number) => {
+    try {
+      await dispathAsync(logoutAccount(id))
+      toast.success("Logout successfully!")
+    }
+    catch (error) {
+      toast.error("Can't login! try again later")
+    }
+  }
   return (
     <div className="h-[50px] flex items-center flex-wrap gap-5 justify-around">
       <LoginForm
@@ -73,7 +84,7 @@ const HomeHeader = () => {
             className="text-sm border border-solid border-[#ff5353] p-2 rounded-md text-[#ff5353] ml-2
                           hover:bg-[#ff5353] hover:text-white"
             onClick={() => {
-              dispathAsync(logoutAccount(id));
+              logout(id);
             }}
           >
             Đăng xuất

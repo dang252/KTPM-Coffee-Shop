@@ -41,24 +41,6 @@ export const axiosAuthResponse = axios.interceptors.response.use(
         if (error.request.status == 401 && !error.config.url?.includes("/auth/refresh")) {
             // console.log("request url", error.config.url)
             try {
-                // const refreshToken = localStorage
-                //     .getItem("refreshToken")
-                //     ?.toString()
-                //     .replace(/^"(.*)"$/, "$1");
-
-                // const res = await axios.post(
-                //     `${import.meta.env.VITE_API_URL}/auth/refresh`,
-                //     {
-                //         //null data
-                //     },
-                //     {
-                //         headers: {
-                //             Authorization: `Bearer ${refreshToken}`,
-                //         }
-                //     }
-                // );
-                // localStorage.setItem("accessToken", JSON.stringify(res.data.access_token));
-                // localStorage.setItem("refreshToken", JSON.stringify(res.data.refresh_token));
                 const res: any = await store.dispatch(refresh()).unwrap()
                 //retry
                 const originalRequest = error.config;

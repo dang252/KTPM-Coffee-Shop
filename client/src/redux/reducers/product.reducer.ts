@@ -18,9 +18,9 @@ import {
 import axios from "axios";
 
 // Interface declair
-interface UserState {
+interface ProductState {
   currentId: string;
-  sourceList: Product[];
+  productList: any[];
   categoryList: Product[];
   cart: CartProduct[];
   isLoading: boolean;
@@ -28,9 +28,9 @@ interface UserState {
 }
 
 // InitialState value
-const initialState: UserState = {
+const initialState: ProductState = {
   currentId: "",
-  sourceList: [],
+  productList: [],
   categoryList: [],
   cart: [],
   isLoading: false,
@@ -67,7 +67,7 @@ export const getProductDetail = createAsyncThunk(
   "products/getDetail",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  async (productId: string, thunkAPI) => {
+  async (productId: number, thunkAPI) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/products/${productId}`, {
@@ -85,11 +85,11 @@ export const getProductDetail = createAsyncThunk(
 
 const productReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(getProductsByCategories.fulfilled, (_, action) => {
-      return action.payload;
+    .addCase(getProductsByCategories.fulfilled, (state, action) => {
+      state.productList = action.payload
     })
-    .addCase(getProductsByCategories.rejected, (error) => {
-      return error
+    .addCase(getProductsByCategories.rejected, (state, _) => {
+      state.productList = []
     })
     .addCase(getProductDetail.fulfilled, (_, action) => {
       return action.payload;

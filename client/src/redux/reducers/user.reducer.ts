@@ -7,11 +7,12 @@ import {
   RejectedAction,
 } from "../../types/reduxThunk.type";
 import { UserAccount } from "../../types/user";
+import { store } from "../store";
 
 // Interface declair
 interface UserState {
   currentId: string;
-  id: number;
+  userId: number;
   username: string;
   fullname: string;
   email: string;
@@ -23,7 +24,7 @@ interface UserState {
 // InitialState value
 const initialState: UserState = {
   currentId: "",
-  id: NaN,
+  userId: NaN,
   username: "",
   fullname: "",
   email: "",
@@ -90,7 +91,8 @@ export const logoutAccount = createAsyncThunk(
         .getItem("accessToken")
         ?.toString()
         .replace(/^"(.*)"$/, "$1");
-
+      const state = store.getState();
+      console.log(state)
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/users/logout`,
         {
@@ -114,6 +116,35 @@ export const stopLoad = () => ({
   type: 'STOP_LOADING',
 });
 
+export const refresh = createAsyncThunk(
+  "user/refresh",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (_, thunkAPI) => {
+    try {
+      const refreshToken = localStorage
+        .getItem("refreshToken")
+        ?.toString()
+        .replace(/^"(.*)"$/, "$1");
+      const state = store.getState();
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/refresh`,
+        {
+          userId: state.persisted.users.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          }
+        }
+      );
+      return response.data
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 
 const userReducer = createReducer(initialState, (builder) => {
   builder
@@ -124,7 +155,7 @@ const userReducer = createReducer(initialState, (builder) => {
       if (action.payload) {
         const accessToken: string = action.payload.accessToken;
         const refreshToken: string = action.payload.refreshToken;
-        state.id = action.payload.sub;
+        state.userId = action.payload.userId;
         state.username = action.payload.username;
         localStorage.setItem("accessToken", JSON.stringify(accessToken));
         localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
@@ -139,10 +170,11 @@ const userReducer = createReducer(initialState, (builder) => {
       if (action.payload) {
         const accessToken: string = action.payload.accessToken;
         const refreshToken: string = action.payload.refreshToken;
-        state.id = action.payload.sub;
+        state.userId = action.payload.userId;
         state.username = action.payload.username;
         localStorage.setItem("accessToken", JSON.stringify(accessToken));
         localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+
 
       }
     })
@@ -150,6 +182,21 @@ const userReducer = createReducer(initialState, (builder) => {
       localStorage.removeItem("accessToken")
       localStorage.removeItem("refreshToken")
       return initialState;
+    })
+    .addCase(refresh.rejected, () => {
+      console.log("refresh rejeceted")
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("refreshToken")
+      return initialState;
+    })
+    .addCase(refresh.fulfilled, (_, action) => {
+      console.log("refresh success")
+      if (action.payload) {
+        const accessToken: string = action.payload.access_token;
+        const refreshToken: string = action.payload.refresh_token;
+        localStorage.setItem("accessToken", JSON.stringify(accessToken));
+        localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+      }
     })
     .addMatcher(
       (action): action is PendingAction => action.type.endsWith("/pending"),
