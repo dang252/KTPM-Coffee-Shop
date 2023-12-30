@@ -2,11 +2,12 @@ export interface Product {
   id: number;
   name: string;
   description?: string;
-  category?: string;
+  category?: string[];
   quantity?: number;
   price: number;
   size?: string;
   topping?: number[];
+  url?: string;
 }
 
 export interface CartProduct {

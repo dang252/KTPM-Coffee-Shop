@@ -11,7 +11,7 @@ import { UserAccount } from "../../types/user";
 // Interface declair
 interface UserState {
   currentId: string;
-  id: string;
+  id: number;
   username: string;
   fullname: string;
   email: string;
@@ -23,7 +23,7 @@ interface UserState {
 // InitialState value
 const initialState: UserState = {
   currentId: "",
-  id: "",
+  id: NaN,
   username: "",
   fullname: "",
   email: "",

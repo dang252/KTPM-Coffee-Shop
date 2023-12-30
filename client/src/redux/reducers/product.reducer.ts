@@ -1,4 +1,4 @@
-import { createReducer } from "@reduxjs/toolkit";
+import { createAsyncThunk, createReducer } from "@reduxjs/toolkit";
 
 import { Product, CartProduct } from "../../types/product";
 
@@ -15,6 +15,7 @@ import {
   decreaseProductToCart,
   updateCart,
 } from "../actions/product.action";
+import axios from "axios";
 
 // Interface declair
 interface UserState {
@@ -36,10 +37,65 @@ const initialState: UserState = {
   isError: false,
 };
 
+export const getProductsByCategories = createAsyncThunk(
+  "products/getByCategories",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (params: string[], thunkAPI) => {
+    try {
+      let queryString = "";
+      for (let i = 0; i < params.length; i++) {
+        queryString += queryString == "" ? params[i] : "+" + params[i]
+      }
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/`, {
+        params: {
+          "categories": queryString,
+        }
+      }
+      );
+
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getProductDetail = createAsyncThunk(
+  "products/getDetail",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (productId: string, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/${productId}`, {
+
+      }
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 // createAsyncThunk middleware
 
 const productReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(getProductsByCategories.fulfilled, (_, action) => {
+      return action.payload;
+    })
+    .addCase(getProductsByCategories.rejected, (error) => {
+      return error
+    })
+    .addCase(getProductDetail.fulfilled, (_, action) => {
+      return action.payload;
+    }).addCase(getProductDetail.rejected, (error) => {
+      return error
+    })
     .addCase(addProductToCart, (state, action) => {
       const product: any = action.payload;
       state.cart.push(product);

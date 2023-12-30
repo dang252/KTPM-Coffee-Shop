@@ -7,6 +7,8 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { logoutAccount } from "../redux/reducers/user.reducer";
+import { useAppDispatch } from "../redux/hooks/hooks";
 
 const HomeHeader = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
@@ -14,6 +16,10 @@ const HomeHeader = () => {
   const username = useSelector<RootState, string>(
     (state) => state.persisted.users.username
   );
+  const id = useSelector<RootState, number>(
+    (state) => state.persisted.users.id
+  );
+  const dispathAsync = useAppDispatch()
   return (
     <div className="h-[50px] flex items-center flex-wrap gap-5 justify-around">
       <LoginForm
@@ -63,6 +69,15 @@ const HomeHeader = () => {
         </div>
         : <div>
           wellcome, {username}
+          <button
+            className="text-sm border border-solid border-[#ff5353] p-2 rounded-md text-[#ff5353] ml-2
+                          hover:bg-[#ff5353] hover:text-white"
+            onClick={() => {
+              dispathAsync(logoutAccount(id));
+            }}
+          >
+            Đăng xuất
+          </button>
         </div>
       }
     </div>
