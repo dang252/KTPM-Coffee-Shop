@@ -17,8 +17,8 @@ export class Users {
     @Column()
     email: string;
 
-    @Column()
-    phone: number;
+    @Column({ nullable: true })
+    phone: string;
 
     @Column({ nullable: true })
     refreshToken: string;
