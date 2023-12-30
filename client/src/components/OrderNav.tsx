@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 
 import { AiOutlineUser } from "react-icons/ai";
 
-import { Product } from "../types/product";
+import { CartProduct } from "../types/product";
 
 // Reduc/redux-toolkit config import
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
 const OrderNav = () => {
-  const cart = useSelector<RootState, Product[]>((state) => state.product.cart);
+  const cart = useSelector<RootState, CartProduct[]>((state) => state.product.cart);
 
   return (
     <div
@@ -48,7 +48,7 @@ const OrderNav = () => {
             />
           </div>
           <div className="absolute right-[-15px] top-[-5px] bg-red-500 text-white rounded-full w-[1px] h-[1px] flex justify-center items-center p-3">
-            <p className="text-sm">{cart.length}</p>
+            <p className="text-sm">{cart?.length}</p>
           </div>
         </div>
       </div>

@@ -17,9 +17,6 @@ export class PromotionService {
     private messageRepository: Repository<Message>,
     @Inject(ProductsService)
     private readonly productsService: ProductsService,
-    // @Inject(forwardRef(() => SocketService))
-    // private readonly socketService: SocketService,
-    // @Inject(forwardRef(() => SocketGateway))
     private readonly socketGateway: SocketGateway
   ) { }
 
@@ -51,7 +48,6 @@ export class PromotionService {
 
   async createProductPromotion(req: createPromotionRequest, repo: Repository<ProductPromotion>, msgRepo: Repository<Message>, productsService: ProductsService, socketGateway: SocketGateway) {
     try {
-      console.log("createProductPromotion", req)
       const newPromotion = new ProductPromotion;
       {
         newPromotion.promotionName = req.promotionName;
@@ -79,7 +75,7 @@ export class PromotionService {
           newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
           newMessage.promotionId = newPromotion.promotionId
         }
-        msgRepo.save(newMessage)
+        await msgRepo.save(newMessage)
         const canSendNoti = socketGateway.sendNotification({
           userId: newMessage.userId,
           message: newMessage.messageInfo,
@@ -89,7 +85,7 @@ export class PromotionService {
         if (canSendNoti) {
           newMessage.status = "SENDED"
         }
-        msgRepo.save(newMessage)
+        await msgRepo.save(newMessage)
       }
       return newPromotion
     }
@@ -138,7 +134,6 @@ export class PromotionService {
     'categories': this.categoryPromotionRepository,
   }
   async createPromotion(req: createPromotionRequest) {
-    console.log(req)
     return this.mapTypePromotion2Action[req.promotionType](req, this.mapTypePromotion2Repo[req.promotionType], this.messageRepository, this.productsService, this.socketGateway);
     // this.createMessage(req)
   }

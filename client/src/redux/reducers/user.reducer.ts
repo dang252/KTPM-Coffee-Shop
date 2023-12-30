@@ -5,7 +5,8 @@ import {
   PendingAction,
   FulfilledAction,
   RejectedAction,
-} from "../../types/reduxThunk.type";
+} from "../../types/reduxthunk.type";
+
 import { UserAccount } from "../../types/user";
 import { store } from "../store";
 

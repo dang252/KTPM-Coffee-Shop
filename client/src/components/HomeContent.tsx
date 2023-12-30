@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HomeCard from "./HomeCard";
 import { getProductsByCategories } from "../redux/reducers/product.reducer";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { toast } from "react-toastify";
-import { Product } from "../types/product";
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 

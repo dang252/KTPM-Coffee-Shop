@@ -6,7 +6,7 @@ import {
   PendingAction,
   FulfilledAction,
   RejectedAction,
-} from "../../types/reduxThunk.type";
+} from "../../types/reduxthunk.type";
 
 import {
   addProductToCart,
@@ -114,13 +114,9 @@ const productReducer = createReducer(initialState, (builder) => {
     .addCase(getProductsByCategories.rejected, (state, _) => {
       state.productList = []
     })
-    .addCase(getProductDetail.fulfilled, (_, action) => {
-      return action.payload;
-    }).addCase(getProductDetail.rejected, (error) => {
-      return error
-    })
     .addCase(addProductToCart, (state, action) => {
       const product: any = action.payload;
+      console.log(product)
       state.cart.push(product);
     })
     .addCase(removeProductToCart, (state, action) => {

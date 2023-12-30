@@ -10,6 +10,7 @@ import { RootState } from "../redux/store";
 import { logoutAccount } from "../redux/reducers/user.reducer";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { toast } from "react-toastify";
+import NotiDropdown from "./NotiDropdown";
 
 const HomeHeader = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
@@ -80,6 +81,7 @@ const HomeHeader = () => {
         </div>
         : <div>
           wellcome, {username}
+          <NotiDropdown />
           <button
             className="text-sm border border-solid border-[#ff5353] p-2 rounded-md text-[#ff5353] ml-2
                           hover:bg-[#ff5353] hover:text-white"

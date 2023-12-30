@@ -11,7 +11,6 @@ import OrderProductQuantity from "./OrderProductQuantity";
 
 import { CartProduct } from "../types/product";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 const TABLE_HEAD = [
   "Tên sản phẩm",
