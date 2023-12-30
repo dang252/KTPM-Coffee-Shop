@@ -5,11 +5,15 @@ import { Link } from "react-router-dom";
 
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const HomeHeader = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const [openRegisterModal, setOpenRegisterModal] = useState<boolean>(false);
-
+  const username = useSelector<RootState, string>(
+    (state) => state.persisted.users.username
+  );
   return (
     <div className="h-[50px] flex items-center flex-wrap gap-5 justify-around">
       <LoginForm
@@ -37,25 +41,30 @@ const HomeHeader = () => {
         </Link>
       </div>
 
-      <div className="flex items-center gap-5">
-        <button
-          className="bg-[#e57905] text-sm text-white p-2 rounded-md"
-          onClick={() => {
-            setOpenLoginModal(true);
-          }}
-        >
-          Đăng nhập
-        </button>
-        <button
-          className="text-sm border border-solid border-[#e57905] p-2 rounded-md text-[#e57905]
+      {username == ""
+        ? <div className="flex items-center gap-5">
+          <button
+            className="bg-[#e57905] text-sm text-white p-2 rounded-md"
+            onClick={() => {
+              setOpenLoginModal(true);
+            }}
+          >
+            Đăng nhập
+          </button>
+          <button
+            className="text-sm border border-solid border-[#e57905] p-2 rounded-md text-[#e57905]
                           hover:bg-[#e57905] hover:text-white"
-          onClick={() => {
-            setOpenRegisterModal(true);
-          }}
-        >
-          Đăng ký
-        </button>
-      </div>
+            onClick={() => {
+              setOpenRegisterModal(true);
+            }}
+          >
+            Đăng ký
+          </button>
+        </div>
+        : <div>
+          wellcome, {username}
+        </div>
+      }
     </div>
   );
 };

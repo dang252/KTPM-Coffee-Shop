@@ -2,6 +2,10 @@ import Modal from "react-modal";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IoMdClose } from "react-icons/io";
+import { useAppDispatch } from "../redux/hooks/hooks";
+import { UserAccount } from "../types/user";
+import { registerAccount } from "../redux/reducers/user.reducer";
+import { toast } from "react-toastify";
 
 const customStyles = {
   overlay: {
@@ -35,7 +39,7 @@ interface PropType {
 
 const RegisterForm = (props: PropType) => {
   const { openRegisterModal, setOpenRegisterModal } = props;
-
+  const dispathAsync = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -47,8 +51,25 @@ const RegisterForm = (props: PropType) => {
     setOpenRegisterModal(false);
   };
 
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    try {
+      const userAccount: UserAccount = {
+        username: data.username,
+        password: data.password,
+        email: data.email,
+        fullname: data.fullname,
+        phone: data.phone,
+      };
+
+      await dispathAsync(registerAccount(userAccount)).unwrap();
+      toast.success(
+        "Register successfully!"
+      );
+      setOpenRegisterModal(false);
+    } catch (err) {
+      console.log("Register failed", err);
+      toast.error("Register failed! please try again later");
+    }
   };
 
   return (

@@ -2,6 +2,10 @@ import Modal from "react-modal";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IoMdClose } from "react-icons/io";
+import { UserAccount } from "../types/user";
+import { loginAccount } from "../redux/reducers/user.reducer";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../redux/hooks/hooks";
 
 const customStyles = {
   overlay: {
@@ -30,7 +34,7 @@ interface PropType {
 
 const LoginForm = (props: PropType) => {
   const { openLoginModal, setOpenLoginModal } = props;
-
+  const dispathAsync = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -41,9 +45,20 @@ const LoginForm = (props: PropType) => {
     setOpenLoginModal(false);
   };
 
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    const { username, password } = data;
-    console.log(username, password);
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    try {
+      const userAccount: UserAccount = {
+        username: data.username,
+        password: data.password,
+      };
+
+      await dispathAsync(loginAccount(userAccount)).unwrap();
+      toast.success("Login successfully");
+      setOpenLoginModal(false);
+    } catch (err) {
+      console.log("login failed", err);
+      toast.error("Login failed! please try again later");
+    }
   };
 
   return (

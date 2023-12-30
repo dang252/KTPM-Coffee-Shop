@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./user.reducer";
 import productReducer from "./product.reducer";
+import persistedReducer from "./persisted.reducer";
 
 export const rootReducer = combineReducers({
-  user: userReducer,
+  persisted: persistedReducer,
   product: productReducer,
 });
