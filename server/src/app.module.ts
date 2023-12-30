@@ -8,6 +8,7 @@ import { ProductsModule } from './products/products.module';
 // import { ConfigModule } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
 import { PromotionModule } from './promotion/promotion.module';
+import { NotifyModule } from './notify/notify.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PromotionModule } from './promotion/promotion.module';
     ProductsModule,
     OrdersModule,
     PromotionModule,
+    NotifyModule,
   ],
   controllers: [AppController],
   providers: [AppService,],

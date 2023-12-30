@@ -48,8 +48,14 @@ export class ProductDetailDto {
     product: Products;
     productImages: ProductImages[];
     toppingList?: Topping[];
+    isFollow: boolean
 }
 
 export class GetProductByIdRequest {
     productId: number;
+}
+
+export class FollowRequest {
+    productId: number;
+    userId: number;
 }

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductImages, Products, Topping, ToppingForProduct } from './entities/product.entity';
+import { FollowerList, ProductImages, Products, Topping, ToppingForProduct } from './entities/product.entity';
 import { In, Repository } from 'typeorm';
-import { ProductDetailDto, ProductsResponse } from './dto/product.dto';
+import { FollowRequest, ProductDetailDto, ProductsResponse } from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -15,6 +15,8 @@ export class ProductsService {
         private toppingForProductRepository: Repository<ToppingForProduct>,
         @InjectRepository(ProductImages)
         private productImagesRepository: Repository<ProductImages>,
+        @InjectRepository(FollowerList)
+        private followerListRepository: Repository<FollowerList>,
     ) {
         this.createSeedData()
     }
@@ -51,12 +53,19 @@ export class ProductsService {
 
     // async findProductsByCategories(cate)
 
-    async getProductDetails(productId: number): Promise<ProductDetailDto> {
+    async getProductDetails(productId: number, userId?: number): Promise<ProductDetailDto> {
         const res = new ProductDetailDto();
         res.product = await this.findProductById(productId)
         res.productImages = await this.productImagesRepository.findBy({ productId: productId })
         const toppingForProduct = await this.findToppingIdsByProductId(productId);
         res.toppingList = toppingForProduct ? [...await this.findToppingsByIds(toppingForProduct.toppingIds)] : []
+        res.isFollow = false;
+        if (userId) {
+            const followers = await this.followerListRepository.findOneBy({ productId: productId })
+            if (followers) {
+                res.isFollow = followers.userIds.includes(userId)
+            }
+        }
         return res;
     }
 
@@ -79,6 +88,51 @@ export class ProductsService {
             res.push(newProduct)
         }
         return res
+    }
+
+    async followProduct(req: FollowRequest) {
+        if (!req.productId || !req.userId) {
+            throw new HttpException('BAD REQUEST', HttpStatus.BAD_REQUEST)
+        }
+        try {
+            console.log("start follow")
+            console.log(req)
+            const followers = await this.followerListRepository.findOneBy({ productId: req.productId })
+            if (followers) {
+                let isFollow = true;
+                for (let i = 0; i <= followers.userIds.length; i++) {
+                    if (followers.userIds[i] == req.userId) {
+                        isFollow = true;
+                    }
+                }
+                if (isFollow) {
+                    followers.userIds = followers.userIds.filter((val) => val != req.userId)
+                    await this.followerListRepository.save(followers)
+                }
+                else {
+                    console.log("follow")
+                    followers.userIds.push(req.userId)
+                    await this.followerListRepository.save(followers)
+                }
+            }
+            else {
+                const newFollowerList = new FollowerList;
+                {
+                    newFollowerList.productId = req.productId;
+                    newFollowerList.userIds = [req.userId]
+                }
+                await this.followerListRepository.save(newFollowerList)
+            }
+            return "success"
+        }
+        catch (error) {
+            console.log(error)
+            if (error instanceof HttpException) {
+                throw error
+            } else {
+                throw new HttpException('INTERNAL SERVER ERROR', HttpStatus.INTERNAL_SERVER_ERROR)
+            }
+        }
     }
 
     //create seed data
@@ -181,30 +235,37 @@ export class ProductsService {
 
         const productImages = [
             {
+                imageId: 1,
                 productId: 1,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877612/KTPM-coffee-shop/1_bc4awi.webp"
             },
             {
+                imageId: 2,
                 productId: 2,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/2_vfqepi.webp"
             },
             {
+                imageId: 3,
                 productId: 3,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/3_uhudke.webp"
             },
             {
+                imageId: 4,
                 productId: 4,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/4_k0v0bb.webp"
             },
             {
+                imageId: 5,
                 productId: 5,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/5_lbeq6u.webp"
             },
             {
+                imageId: 6,
                 productId: 6,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/6_dectpj.webp"
             },
             {
+                imageId: 7,
                 productId: 7,
                 url: "https://res.cloudinary.com/dxsprhbls/image/upload/v1703877613/KTPM-coffee-shop/7_oszvj8.webp"
             },

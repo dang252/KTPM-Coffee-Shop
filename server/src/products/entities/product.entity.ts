@@ -55,3 +55,12 @@ export class ProductImages {
     @Column()
     url: string;
 }
+
+@Entity()
+export class FollowerList {
+    @PrimaryColumn()
+    productId: number;
+
+    @Column('integer', { array: true, default: [] })
+    userIds: number[];
+}
