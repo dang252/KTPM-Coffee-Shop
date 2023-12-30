@@ -63,7 +63,11 @@ export class ProductsService {
         if (userId) {
             const followers = await this.followerListRepository.findOneBy({ productId: productId })
             if (followers) {
-                res.isFollow = followers.userIds.includes(userId)
+                for (let i = 0; i <= followers.userIds.length; i++) {
+                    if (followers.userIds[i] == userId) {
+                        res.isFollow = true;
+                    }
+                }
             }
         }
         return res;
@@ -95,13 +99,12 @@ export class ProductsService {
             throw new HttpException('BAD REQUEST', HttpStatus.BAD_REQUEST)
         }
         try {
-            console.log("start follow")
-            console.log(req)
             const followers = await this.followerListRepository.findOneBy({ productId: req.productId })
             if (followers) {
-                let isFollow = true;
+                let isFollow = false;
                 for (let i = 0; i <= followers.userIds.length; i++) {
                     if (followers.userIds[i] == req.userId) {
+                        console.log(followers.userIds[i])
                         isFollow = true;
                     }
                 }
@@ -110,8 +113,8 @@ export class ProductsService {
                     await this.followerListRepository.save(followers)
                 }
                 else {
-                    console.log("follow")
                     followers.userIds.push(req.userId)
+                    console.log(followers)
                     await this.followerListRepository.save(followers)
                 }
             }

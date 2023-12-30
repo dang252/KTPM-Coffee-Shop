@@ -59,73 +59,64 @@ const Collections = () => {
       <div className="hidden xl:flex flex-col gap-5">
         <Link
           to="/collections/all"
-          className={`hover:cursor-pointer ${
-            category === "all" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "all" && "text-[#e57905] font-bold"
+            }`}
         >
           Tất Cả
         </Link>
         <Link
           to="/collections/coffee"
-          className={`hover:cursor-pointer ${
-            category === "coffee" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "coffee" && "text-[#e57905] font-bold"
+            }`}
         >
           Cà Phê
         </Link>
         <Link
           to="/collections/tea"
-          className={`hover:cursor-pointer ${
-            category === "tea" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "tea" && "text-[#e57905] font-bold"
+            }`}
         >
           Trà
         </Link>
         <Link
           to="/collections/cloud"
-          className={`hover:cursor-pointer ${
-            category === "cloud" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "cloud" && "text-[#e57905] font-bold"
+            }`}
         >
           Cloud
         </Link>
         <Link
           to="/collections/hi-tea"
-          className={`hover:cursor-pointer ${
-            category === "hi-tea" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "hi-tea" && "text-[#e57905] font-bold"
+            }`}
         >
           Hi-Tea Healthy
         </Link>
         <Link
           to="/collections/tra-xanh"
-          className={`hover:cursor-pointer ${
-            category === "tra-xanh" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "tra-xanh" && "text-[#e57905] font-bold"
+            }`}
         >
           Trà Xanh - Sô cô la
         </Link>
         <Link
           to="/collections/da-xay"
-          className={`hover:cursor-pointer ${
-            category === "da-xay" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "da-xay" && "text-[#e57905] font-bold"
+            }`}
         >
           Thức uống đá xay
         </Link>
         <Link
           to="/collections/snack"
-          className={`hover:cursor-pointer ${
-            category === "snack" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "snack" && "text-[#e57905] font-bold"
+            }`}
         >
           Bánh & Snack
         </Link>
         <Link
           to="/collections/thuong-thuc-tai-nha"
-          className={`hover:cursor-pointer ${
-            category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
+            }`}
         >
           Thưởng Thức Tại Nhà
         </Link>
@@ -133,10 +124,10 @@ const Collections = () => {
       <div className="w-[100%] md:max-w-[1000px] md:border-l-2 md:border-gray-200 md:pl-14">
         <p className="font-bold text-2xl mb-8">{title}</p>
         <div className="flex flex-wrap gap-10">
+          {/* <HomeCard />
           <HomeCard />
           <HomeCard />
-          <HomeCard />
-          <HomeCard />
+          <HomeCard /> */}
         </div>
       </div>
     </div>

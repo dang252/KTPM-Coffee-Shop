@@ -2,8 +2,8 @@ import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Users } from './entities/user.entity';
 import { loginRequest, logoutRequest, refreshRequest } from './dto/user.dto';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
+// import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+// import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 // import { Response } from 'express'
 
 @Controller('users')
@@ -20,13 +20,13 @@ export class UsersController {
         return await this.usersService.login(req)
     }
 
-    @UseGuards(AccessTokenGuard)
+    // @UseGuards(AccessTokenGuard)
     @Post("/logout")
     async logout(@Body() req: logoutRequest) {
         return await this.usersService.logout(req)
     }
 
-    @UseGuards(RefreshTokenGuard)
+    // @UseGuards(RefreshTokenGuard)
     @Post("/refresh")
     async refresh(@Req() req: Request) {
         const refreshReq = new refreshRequest()

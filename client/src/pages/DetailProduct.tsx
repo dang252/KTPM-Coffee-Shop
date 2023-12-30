@@ -26,9 +26,9 @@ import ProductQuantity from "../components/ProductQuantity";
 
 import { CoffeeCartDirector } from "../builders/product-director";
 import { useAppDispatch } from "../redux/hooks/hooks";
-import { getProductDetail } from "../redux/reducers/product.reducer";
+import { followProduct, getProductDetail } from "../redux/reducers/product.reducer";
 import ToppingComponent from "../components/ToppingComponent";
-import { HeartOutlined } from "@ant-design/icons";
+import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 import { RootState } from "../redux/store";
 
 const DetailProduct = () => {
@@ -42,6 +42,7 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [toppings, setToppings] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [follow, setFollow] = useState<boolean>(false)
 
   const navigate = useNavigate();
 
@@ -54,7 +55,7 @@ const DetailProduct = () => {
     const getData = async (id: number) => {
       try {
         console.log("fetch")
-        const data = await dispathAsync(getProductDetail(id))
+        const data = await dispathAsync(getProductDetail({ productId: id, userId: userId }))
         setProduct(data?.payload)
         console.log("successs", data)
       }
@@ -65,13 +66,14 @@ const DetailProduct = () => {
     }
     window.scrollTo(0, 0);
     getData(Number(id))
-  }, [dispathAsync, id]);
+  }, [dispathAsync, id, userId]);
 
   useEffect(() => {
     // console.log(product)
     document.title = product?.product.productName;
     setName(product?.product.productName);
     setPrize(product?.product.productPrice / 1000);
+    setFollow(product?.isFollow)
   }, [product])
 
   const initProductId = product?.product.productId;
@@ -165,20 +167,18 @@ const DetailProduct = () => {
     }
   };
 
+  const onFollow = async () => {
+    try {
+      await dispathAsync(followProduct({ productId: Number(id), userId: userId }))
+      setFollow(!follow)
+    }
+    catch (error) {
+      toast.error("Something wrong, try again later!")
+    }
+  }
+
   return (
     <>
-      {/* <ToastContainer
-        position="bottom-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      /> */}
       <Dialog open={open} size="sm" handler={handleOpen}>
         <DialogHeader>Thêm sản phẩm vào giỏ hàng thành công!</DialogHeader>
         <DialogBody>
@@ -225,9 +225,12 @@ const DetailProduct = () => {
             <div className="flex flex-col gap-3">
               <div className="flex items-center">
                 <p className="font-bold text-2xl">{name}</p>
-                {userId &&
-                  <HeartOutlined className="" style={{ fontSize: '30px', marginLeft: '10px' }} />
-                }
+                <div onClick={onFollow}>
+                  {userId && follow
+                    ? <HeartFilled className="" style={{ fontSize: '30px', marginLeft: '10px', color: 'hotpink' }} />
+                    : <HeartOutlined className="" style={{ fontSize: '30px', marginLeft: '10px' }} />
+                  }
+                </div>
               </div>
               {/* <p className="font-bold text-2xl">{name}</p> */}
               <p className="font-bold text-2xl text-[#e57905]">{product?.product.productPrice} đ</p>

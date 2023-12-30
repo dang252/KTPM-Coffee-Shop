@@ -16,6 +16,7 @@ import {
   updateCart,
 } from "../actions/product.action";
 import axios from "axios";
+import { Query } from "typeorm/driver/Query.js";
 
 // Interface declair
 interface ProductState {
@@ -67,11 +68,34 @@ export const getProductDetail = createAsyncThunk(
   "products/getDetail",
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  async (productId: number, thunkAPI) => {
+  async (req: { productId: number, userId?: number }, thunkAPI) => {
+    try {
+      let query = ""
+      if (req.userId) {
+        query = `?userId=${req.userId}`
+      }
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/detail/${req.productId + query}`, {
+
+      }
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+
+export const followProduct = createAsyncThunk(
+  "products/follow",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (req: { productId: number, userId: number }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/${productId}`, {
-
+        `${import.meta.env.VITE_API_URL}/products/follow?productId=${req.productId}&userId=${req.userId}`, {
       }
       );
       return response.data;
