@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import {
   Button,
   Dialog,
@@ -7,8 +6,8 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
-
 import { v4 as uuidv4 } from "uuid";
+import { Image } from "antd";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +27,7 @@ import { CoffeeCartDirector } from "../builders/product-director";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import {
   followProduct,
+  getAllProducts,
   getProductDetail,
 } from "../redux/reducers/product.reducer";
 import ToppingComponent from "../components/ToppingComponent";
@@ -47,13 +47,17 @@ const DetailProduct = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [follow, setFollow] = useState<boolean>(false);
 
+  const [product, setProduct] = useState<any>();
+  const [more, setMore] = useState<any[]>([]);
+
   const navigate = useNavigate();
 
   const dispathAsync = useAppDispatch();
+
   const userId = useSelector<RootState, number>(
     (state) => state.persisted.users.userId
   );
-  const [product, setProduct] = useState<any>();
+
   useEffect(() => {
     const getData = async (id: number) => {
       try {
@@ -78,6 +82,23 @@ const DetailProduct = () => {
     setName(product?.product.productName);
     setPrize(product?.product.productPrice / 1000);
     setFollow(product?.isFollow);
+  }, [product]);
+
+  useEffect(() => {
+    const handleGetRandomProducts = async () => {
+      const res = await dispathAsync(getAllProducts());
+
+      // Shuffle array
+      const shuffled = res.payload.sort(() => 0.5 - Math.random());
+
+      // Get sub-array of first n elements after shuffled
+      const selected = shuffled.slice(0, 5);
+
+      setMore(selected);
+    };
+
+    handleGetRandomProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const initProductId = product?.product.productId;
@@ -238,18 +259,22 @@ const DetailProduct = () => {
             {product?.product.productName}
           </p>
         </div>
-        <div className="w-[100%] flex flex-col gap-3 md:gap-[100px] md:flex-row justify-between">
+        <div className="w-[100%] flex flex-col gap-3 md:gap-[50px] md:flex-row justify-between">
           <div className="w-[100%] md:w-[50%]">
-            <img src={product?.productImages[0].url} />
+            {/* <img src={product?.productImages[0].url} /> */}
+            <Image src={product?.productImages[0].url} />
           </div>
           <div className="w-[100%] md:w-[50%] mt-10 md:mt-0">
             <div className="flex flex-col gap-3">
               <div className="flex items-center">
                 <p className="font-bold text-2xl">{name}</p>
-                <div onClick={onFollow}>
+                <div
+                  className="flex justify-center hover:cursor-pointer"
+                  onClick={onFollow}
+                >
                   {userId && follow ? (
                     <HeartFilled
-                      className=""
+                      className="hover:text-red-500"
                       style={{
                         fontSize: "30px",
                         marginLeft: "10px",
@@ -258,7 +283,7 @@ const DetailProduct = () => {
                     />
                   ) : (
                     <HeartOutlined
-                      className=""
+                      className="hover:text-pink-400"
                       style={{ fontSize: "30px", marginLeft: "10px" }}
                     />
                   )}
@@ -266,7 +291,7 @@ const DetailProduct = () => {
               </div>
               {/* <p className="font-bold text-2xl">{name}</p> */}
               <p className="font-bold text-2xl text-[#e57905]">
-                {product?.product.productPrice} đ
+                {product?.product.productPrice}đ
               </p>
             </div>
             <div className="flex flex-col gap-3 mt-8">
@@ -353,6 +378,9 @@ const DetailProduct = () => {
             <div className="flex flex-col gap-3 mt-10">
               <p className="font-semibold">Topping</p>
               <div className="flex flex-wrap gap-5">
+                {product?.toppingList?.length === 0 && (
+                  <p className="text-sm">Sản phẩm này không hỗ trợ topping</p>
+                )}
                 {product?.toppingList &&
                   product.toppingList.map((topping: any) => {
                     const uid = uuidv4();
@@ -387,6 +415,10 @@ const DetailProduct = () => {
             <div
               className="flex gap-3 justify-center items-center text-white font-semibold p-3 rounded-md bg-[#e57905] hover:cursor-pointer"
               onClick={() => {
+                if (userId === null) {
+                  toast.error("Vui lòng đăng nhập");
+                  return;
+                }
                 handleAddProduct();
               }}
             >
@@ -415,13 +447,12 @@ const DetailProduct = () => {
         </div>
         <div className="w-[100%] h-[1px] bg-gray-200"></div>
         <div className="flex flex-col">
-          <p className="font-bold">Sản phẩm liên quan</p>
+          <p className="font-bold">Sản phẩm gợi ý</p>
           <div className="flex flex-wrap gap-5 mt-5">
-            <HomeCardSmall />
-            <HomeCardSmall />
-            <HomeCardSmall />
-            <HomeCardSmall />
-            <HomeCardSmall />
+            {more?.map((product) => {
+              const uid = uuidv4();
+              return <HomeCardSmall key={uid} product={product} />;
+            })}
           </div>
         </div>
       </div>

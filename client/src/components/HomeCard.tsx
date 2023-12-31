@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const HomeCard = (props: { product: any }) => {
-  const { product } = { ...props }
+  const { product } = { ...props };
   return (
     <div className="flex flex-col w-[180px] xl:w-[280px] md:h-[350px]">
       <Link to={`/product/${product.product.productId}`}>
@@ -17,9 +17,11 @@ const HomeCard = (props: { product: any }) => {
             {product.product.productName}
           </p>
         </Link>
-        <p className="text-[15px] font-thin text-gray-600">{product.product.productPrice}</p>
+        <p className="text-[15px] font-thin text-gray-600">
+          {product.product.productPrice}đ
+        </p>
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -12,7 +12,7 @@ import OrderProductQuantity from "./OrderProductQuantity";
 
 import { CartProduct } from "../types/product";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { cartConfirm } from "../redux/reducers/product.reducer";
 import { toast } from "react-toastify";
@@ -30,6 +30,7 @@ const TABLE_HEAD = [
 const OrderTable = () => {
   const [address, setAddress] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
+  const [total, setTotal] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -43,6 +44,32 @@ const OrderTable = () => {
   const cart = useSelector<RootState, CartProduct[]>(
     (state) => state.product.cart
   );
+
+  const handleGetTotalBill = (cart: CartProduct[]) => {
+    const value = cart.map((product) => {
+      const orginialPrice = product?.price;
+      let toppingPrice = 0;
+
+      if (
+        product?.topping?.length !== 0 &&
+        product?.topping?.length !== undefined
+      ) {
+        toppingPrice = product?.topping?.length * 10000;
+      }
+
+      return orginialPrice + toppingPrice;
+    });
+
+    const sum = value.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+
+    setTotal(sum * 10);
+  };
+
+  useEffect(() => {
+    handleGetTotalBill(cart);
+  }, [cart]);
 
   const handleChangeQuantity = (
     type: string,
@@ -165,6 +192,14 @@ const OrderTable = () => {
         <div className="w-[100%] flex flex-col gap-3 items-center">
           <p className="font-bold">Không có sản phẩm trong giỏ hàng</p>
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          <Button
+            color="green"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Quay lại trang chủ
+          </Button>
         </div>
       ) : (
         <div className="w-[100%] flex flex-col gap-10">
@@ -193,7 +228,7 @@ const OrderTable = () => {
                   (
                     {
                       cart_id,
-                      product_id,
+                      id,
                       name,
                       size,
                       quantity,
@@ -203,7 +238,7 @@ const OrderTable = () => {
                     },
                     index
                   ) => {
-                    const id = uuidv4();
+                    const uid = uuidv4();
 
                     const isLast = index === cart?.length - 1;
                     const classes = isLast
@@ -211,7 +246,7 @@ const OrderTable = () => {
                       : "p-4 border-b border-blue-gray-50";
 
                     return (
-                      <tr key={id}>
+                      <tr key={uid}>
                         <td className={classes}>
                           <Typography
                             variant="small"
@@ -222,7 +257,7 @@ const OrderTable = () => {
                           </Typography>
                         </td>
                         <td className={classes}>
-                          <Link to={`/product/${product_id}`}>
+                          <Link to={`/product/${id}`}>
                             <div className="w-[100px]">
                               <img
                                 className="w-[100%]"
@@ -299,10 +334,14 @@ const OrderTable = () => {
                             <Button
                               color="red"
                               onClick={() => {
-                                dispath({
-                                  type: "products/removeProductToCart",
-                                  payload: cart_id,
-                                });
+                                const text = "Bạn có chắc muốn xóa sản phẩm?";
+
+                                if (confirm(text) == true) {
+                                  dispath({
+                                    type: "products/removeProductToCart",
+                                    payload: cart_id,
+                                  });
+                                }
                               }}
                             >
                               Xóa sản phẩm
@@ -317,6 +356,16 @@ const OrderTable = () => {
             </table>
           </Card>
 
+          <Button
+            className="w-[170px] self-end"
+            color="green"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Quay lại trang chủ
+          </Button>
+
           <form
             className="w-[90%] md:w-[40%] self-center md:self-end flex flex-col gap-5"
             onSubmit={(e) => {
@@ -324,6 +373,7 @@ const OrderTable = () => {
             }}
           >
             <p className="text-center text-xl font-bold">Thông tin nhận hàng</p>
+            <p>Họ tên khách hàng: customername</p>
             <Input
               value={address}
               onChange={(e) => {
@@ -342,6 +392,9 @@ const OrderTable = () => {
               crossOrigin={undefined}
               required={true}
             />
+            <p className="font-bold text-xl text-[#e57905]">
+              Thành tiền: {total} VNĐ
+            </p>
             <Button color="amber" type="submit">
               Thanh toán
             </Button>

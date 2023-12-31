@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import { v4 as uuidv4 } from "uuid";
 
+import { useDispatch } from "react-redux";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { getDetailBill } from "../redux/reducers/product.reducer";
 
@@ -16,6 +17,7 @@ const BillContent = () => {
   const params = useParams();
   const { orderId } = params;
 
+  const dispath = useDispatch();
   const dispatchAsync = useAppDispatch();
 
   const handleGetBillDetail = async () => {
@@ -27,15 +29,26 @@ const BillContent = () => {
 
   useEffect(() => {
     handleGetBillDetail();
+    dispath({ type: "products/updateCart", payload: [] }); // Reset cart
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="w-[95%] xl:max-w-[1300px] min-h-[400px] z-10 mx-auto mt-[300px] md:mt-[150px] mb-[100px]">
-      <Card className="w-[100%] p-6">
+    <div className="w-[95%] xl:max-w-[1200px] min-h-[400px] z-10 mx-auto mt-[300px] md:mt-[150px] mb-[100px]">
+      <div className="w-[100%] p-6">
+        <svg
+          viewBox="0 0 24 24"
+          className="text-green-600 w-16 h-16 mx-auto my-6"
+        >
+          <path
+            fill="currentColor"
+            d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+          />
+        </svg>
         <p className="text-center text-[30px] font-bold">
           Thanh toán thành công
         </p>
+
         <div className="mt-10 flex flex-col gap-8 text-[18px]">
           <p>Mã đơn hàng: {detailBill?.orderId}</p>
           <p>Địa chỉ nhận hàng: {detailBill?.shippingInfoAddress}</p>
@@ -44,7 +57,7 @@ const BillContent = () => {
           <p>Thành tiền: {detailBill?.totalPrice}đ</p>
           <div>
             <p className="font-semibold">Sản phẩm:</p>
-            <Card className="my-5">
+            <Card className="my-5 overflow-x-auto">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
@@ -145,7 +158,7 @@ const BillContent = () => {
           </div>
           <Button
             className="self-end w-[120px]"
-            color="blue"
+            color="green"
             onClick={() => {
               navigate("/");
             }}
@@ -153,7 +166,7 @@ const BillContent = () => {
             Đồng ý
           </Button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

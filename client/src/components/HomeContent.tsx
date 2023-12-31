@@ -41,7 +41,6 @@ const HomeContent = () => {
       {products &&
         products.map((product: any) => {
           const uid = uuidv4();
-
           return <HomeCard key={uid} product={product} />;
         })}
     </div>

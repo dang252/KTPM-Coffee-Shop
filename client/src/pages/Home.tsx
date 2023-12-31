@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 
 import HomeHeader from "../components/HomeHeader";
 import HomeNav from "../components/HomeNav";
@@ -14,10 +14,12 @@ import DetailProduct from "./DetailProduct";
 import Collections from "./Collections";
 
 const Home = () => {
+  const params = useParams();
+
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "The Coffee House - Deliver 1800 6936";
-  }, []);
+  }, [params]);
 
   return (
     <div className="flex flex-col">

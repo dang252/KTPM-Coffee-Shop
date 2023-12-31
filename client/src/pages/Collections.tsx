@@ -1,16 +1,47 @@
 import { useEffect, useState } from "react";
+import { Empty } from "antd";
+import { v4 as uuidv4 } from "uuid";
 
 import { useParams, Link } from "react-router-dom";
 
+import { useAppDispatch } from "../redux/hooks/hooks";
+import { getAllProducts } from "../redux/reducers/product.reducer";
+
+import HomeCard from "../components/HomeCard";
 
 const Collections = () => {
   const [title, setTitle] = useState<string>("");
+  const [productsByCate, setProductsByCate] = useState<any[]>([]);
+
+  const dispathAsync = useAppDispatch();
+
   const params = useParams();
   const { category } = params;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const handleGetAllProduct = async () => {
+      console.log(category);
+
+      const res = await dispathAsync(getAllProducts());
+
+      if (category === "all") setProductsByCate(res.payload);
+      else if (category === "coffee")
+        setProductsByCate(
+          res.payload.filter((product: any) => {
+            return product?.product?.category;
+          })
+        );
+      else setProductsByCate([]);
+    };
+
+    handleGetAllProduct();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category]);
 
   useEffect(() => {
     if (category === "all") {
@@ -58,64 +89,73 @@ const Collections = () => {
       <div className="hidden xl:flex flex-col gap-5">
         <Link
           to="/collections/all"
-          className={`hover:cursor-pointer ${category === "all" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "all" && "text-[#e57905] font-bold"
+          }`}
         >
           Tất Cả
         </Link>
         <Link
           to="/collections/coffee"
-          className={`hover:cursor-pointer ${category === "coffee" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "coffee" && "text-[#e57905] font-bold"
+          }`}
         >
           Cà Phê
         </Link>
         <Link
           to="/collections/tea"
-          className={`hover:cursor-pointer ${category === "tea" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "tea" && "text-[#e57905] font-bold"
+          }`}
         >
           Trà
         </Link>
         <Link
           to="/collections/cloud"
-          className={`hover:cursor-pointer ${category === "cloud" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "cloud" && "text-[#e57905] font-bold"
+          }`}
         >
           Cloud
         </Link>
         <Link
           to="/collections/hi-tea"
-          className={`hover:cursor-pointer ${category === "hi-tea" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "hi-tea" && "text-[#e57905] font-bold"
+          }`}
         >
           Hi-Tea Healthy
         </Link>
         <Link
           to="/collections/tra-xanh"
-          className={`hover:cursor-pointer ${category === "tra-xanh" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "tra-xanh" && "text-[#e57905] font-bold"
+          }`}
         >
           Trà Xanh - Sô cô la
         </Link>
         <Link
           to="/collections/da-xay"
-          className={`hover:cursor-pointer ${category === "da-xay" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "da-xay" && "text-[#e57905] font-bold"
+          }`}
         >
           Thức uống đá xay
         </Link>
         <Link
           to="/collections/snack"
-          className={`hover:cursor-pointer ${category === "snack" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "snack" && "text-[#e57905] font-bold"
+          }`}
         >
           Bánh & Snack
         </Link>
         <Link
           to="/collections/thuong-thuc-tai-nha"
-          className={`hover:cursor-pointer ${category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
-            }`}
+          className={`hover:cursor-pointer ${
+            category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
+          }`}
         >
           Thưởng Thức Tại Nhà
         </Link>
@@ -123,10 +163,17 @@ const Collections = () => {
       <div className="w-[100%] md:max-w-[1000px] md:border-l-2 md:border-gray-200 md:pl-14">
         <p className="font-bold text-2xl mb-8">{title}</p>
         <div className="flex flex-wrap gap-10">
-          {/* <HomeCard />
-          <HomeCard />
-          <HomeCard />
-          <HomeCard /> */}
+          {productsByCate?.length === 0 && (
+            <div className="mt-[100px] w-[100%] flex flex-col gap-3 items-center">
+              <p className="font-bold">Không có sản phẩm thỏa yêu cầu</p>
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>
+          )}
+
+          {productsByCate?.map((product) => {
+            const uid = uuidv4();
+            return <HomeCard key={uid} product={product} />;
+          })}
         </div>
       </div>
     </div>

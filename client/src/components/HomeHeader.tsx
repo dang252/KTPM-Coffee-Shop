@@ -2,9 +2,11 @@ import { useState } from "react";
 
 import { BsTelephone } from "react-icons/bs";
 import { CiLocationOn } from "react-icons/ci";
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useSelector } from "react-redux";
@@ -20,15 +22,26 @@ const HomeHeader = () => {
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const [openRegisterModal, setOpenRegisterModal] = useState<boolean>(false);
 
-  const navigate = useNavigate();
-
   const username = useSelector<RootState, string>(
     (state) => state.persisted.users.username
   );
+
   const id = useSelector<RootState, number>(
     (state) => state.persisted.users.userId
   );
+
   const dispathAsync = useAppDispatch();
+
+  const cartItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <Link to="/order">Giỏ hàng</Link>,
+    },
+    {
+      key: "2",
+      label: <Link to={`/history/${id}`}>Lịch sử mua hàng</Link>,
+    },
+  ];
 
   const logout = async (id: number) => {
     try {
@@ -38,6 +51,7 @@ const HomeHeader = () => {
       toast.error("Can't login! try again later");
     }
   };
+
   return (
     <div className="h-[50px] flex items-center flex-wrap gap-5 justify-around">
       <LoginForm
@@ -86,20 +100,27 @@ const HomeHeader = () => {
           </button>
         </div>
       ) : (
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-[20px]">
           Xin chào, {username}
           <NotiDropdown />
-          <ShoppingCartOutlined
-            className="text-2xl hover:cursor-pointer hover:text-blue-500"
-            onClick={() => {
-              navigate(`/history/${id}`);
-            }}
-          />
+          <Dropdown
+            menu={{ items: cartItems }}
+            className="flex items-center justify-center"
+            placement="bottomRight"
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <ShoppingCartOutlined className="text-[28px] hover:cursor-pointer hover:text-blue-500" />
+            </a>
+          </Dropdown>
           <button
             className="text-sm border border-solid border-[#ff5353] p-2 rounded-md text-[#ff5353] ml-2
                           hover:bg-[#ff5353] hover:text-white"
             onClick={() => {
-              logout(id);
+              const text = "Bạn có chắc muốn đăng xuất?";
+
+              if (confirm(text) == true) {
+                logout(id);
+              }
             }}
           >
             Đăng xuất

@@ -168,6 +168,24 @@ export const getUserBillHistory = createAsyncThunk(
   }
 );
 
+export const getAllProducts = createAsyncThunk(
+  "products/getAllProducts",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/all`,
+        {}
+      );
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const productReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(getProductsByCategories.fulfilled, (state, action) => {
