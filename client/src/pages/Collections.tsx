@@ -28,11 +28,13 @@ const Collections = () => {
 
       const res = await dispathAsync(getAllProducts());
 
+      console.log(res.payload);
+
       if (category === "all") setProductsByCate(res.payload);
       else if (category === "coffee")
         setProductsByCate(
           res.payload.filter((product: any) => {
-            return product?.product?.category;
+            return product?.product?.categories.includes("coffee");
           })
         );
       else setProductsByCate([]);
