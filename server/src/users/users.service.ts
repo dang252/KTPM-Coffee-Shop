@@ -21,8 +21,7 @@ export class UsersService {
 
     // Hash data by bcrypt lib
     hashData(data: string) {
-        data.slice(data.length - 10, data.length - 1)
-        return bcrypt.hash(data.slice(data.length - 10, data.length - 1), 10);
+        return bcrypt.hash(data, 10);
     }
 
     // Hash the refresh token and save to database
@@ -153,7 +152,7 @@ export class UsersService {
     async refresh(req: refreshRequest): Promise<loginResponse> {
         try {
             const user = await this.findUserById(req.userId);
-            if (!user || !(await bcrypt.compare(req.refreshToken.slice(req.refreshToken.length - 10, req.refreshToken.length - 1), user.refreshToken))) {
+            if (!user || !(await bcrypt.compare(req.refreshToken, user.refreshToken))) {
                 throw new HttpException('INVALID REQUEST', HttpStatus.BAD_REQUEST)
             }
             //create response

@@ -10,19 +10,24 @@ import { OrdersModule } from './orders/orders.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { NotifyModule } from './notify/notify.module';
 import { SocketModule } from './socket/socket.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: +5432,
-      username: 'postgres',
-      password: '123',
-      database: 'thecoffeehouse',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      // migrations: [__dirname + '/dist/db/migration/*{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     UsersModule,
     ProductsModule,
@@ -34,4 +39,4 @@ import { SocketModule } from './socket/socket.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

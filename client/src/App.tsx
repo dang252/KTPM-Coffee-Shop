@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Order from "./pages/Order";
 import Bill from "./pages/Bill";
 import History from "./pages/History";
+import Admin from "./pages/Admin";
 
 const App = () => {
   axiosAuthRequest;
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="/order" element={<Order />} />
         <Route path="/bill/:orderId" element={<Bill />} />
         <Route path="/history/:userId" element={<History />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </>
   );
