@@ -57,6 +57,7 @@ export class PromotionService {
         newPromotion.endDate = new Date(req.endDate)
         newPromotion.productIds = req.productIds;
       }
+      // console.log(newPromotion)
       await repo.save(newPromotion)
       console.log("create message")
       let receivedUser = []

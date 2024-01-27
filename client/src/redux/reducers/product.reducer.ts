@@ -75,8 +75,7 @@ export const getProductDetail = createAsyncThunk(
         query = `?userId=${req.userId}`;
       }
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/detail/${
-          req.productId + query
+        `${import.meta.env.VITE_API_URL}/products/detail/${req.productId + query
         }`,
         {}
       );
@@ -95,8 +94,7 @@ export const followProduct = createAsyncThunk(
   async (req: { productId: number; userId: number }, thunkAPI) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/products/follow?productId=${
-          req.productId
+        `${import.meta.env.VITE_API_URL}/products/follow?productId=${req.productId
         }&userId=${req.userId}`,
         {}
       );

@@ -6,6 +6,7 @@ import { UserAccount } from "../types/user";
 import { loginAccount } from "../redux/reducers/user.reducer";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../redux/hooks/hooks";
+import { useNavigate } from "react-router-dom";
 
 const customStyles = {
   overlay: {
@@ -45,6 +46,8 @@ const LoginForm = (props: PropType) => {
     setOpenLoginModal(false);
   };
 
+  const navigate = useNavigate();
+
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     try {
       const userAccount: UserAccount = {
@@ -52,9 +55,14 @@ const LoginForm = (props: PropType) => {
         password: data.password,
       };
 
-      await dispathAsync(loginAccount(userAccount)).unwrap();
+      const res = await dispathAsync(loginAccount(userAccount)).unwrap();
       toast.success("Login successfully");
       setOpenLoginModal(false);
+      console.log("admin")
+      console.log(import.meta.env.VITE_ADMIN_USERNAME)
+      if (res.username == (import.meta.env.VITE_ADMIN_USERNAME)) {
+        navigate("/admin")
+      }
     } catch (err) {
       console.log("login failed", err);
       toast.error("Login failed! please try again later");
