@@ -38,7 +38,7 @@ export const axiosAuthResponse = axios.interceptors.response.use(
     },
     async function (error: any) {
         // console.log("interceptor response", error)
-        if (error.request.status == 401 && !error.config.url?.includes("/auth/refresh")) {
+        if (error.request.status == 401 && !error.config.url?.includes("/users/refresh")) {
             // console.log("request url", error.config.url)
             try {
                 const res: any = await store.dispatch(refresh()).unwrap()
