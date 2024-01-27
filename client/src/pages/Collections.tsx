@@ -30,14 +30,87 @@ const Collections = () => {
 
       console.log(res.payload);
 
-      if (category === "all") setProductsByCate(res.payload);
-      else if (category === "coffee")
-        setProductsByCate(
-          res.payload.filter((product: any) => {
-            return product?.product?.categories.includes("coffee");
-          })
-        );
-      else setProductsByCate([]);
+      switch (category) {
+        case "all": {
+          setProductsByCate(res.payload);
+          break;
+        }
+        case "coffee": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("coffee");
+            })
+          );
+          break;
+        }
+        case "tea": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("tea");
+            })
+          );
+          break;
+        }
+        case "hi-tea": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("hi-tea");
+            })
+          );
+          break;
+        }
+        case "cloud": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("cloud");
+            })
+          );
+          break;
+        }
+        case "tra-xanh": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("matcha");
+            })
+          );
+          break;
+        }
+        case "da-xay": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("ice-blended");
+            })
+          );
+          break;
+        }
+        case "snack": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("food");
+            })
+          );
+          break;
+        }
+        case "thuong-thuc-tai-nha": {
+          setProductsByCate(
+            res.payload.filter((product: any) => {
+              return product?.product?.categories.includes("packed");
+            })
+          );
+          break;
+        }
+        default: {
+          setProductsByCate([]);
+        }
+      }
+      // if (category === "all") setProductsByCate(res.payload);
+      // else if (category === "coffee")
+      //   setProductsByCate(
+      //     res.payload.filter((product: any) => {
+      //       return product?.product?.categories.includes("coffee");
+      //     })
+      //   );
+      // else setProductsByCate([]);
     };
 
     handleGetAllProduct();
@@ -91,73 +164,64 @@ const Collections = () => {
       <div className="hidden xl:flex flex-col gap-5">
         <Link
           to="/collections/all"
-          className={`hover:cursor-pointer ${
-            category === "all" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "all" && "text-[#e57905] font-bold"
+            }`}
         >
           Tất Cả
         </Link>
         <Link
           to="/collections/coffee"
-          className={`hover:cursor-pointer ${
-            category === "coffee" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "coffee" && "text-[#e57905] font-bold"
+            }`}
         >
           Cà Phê
         </Link>
         <Link
           to="/collections/tea"
-          className={`hover:cursor-pointer ${
-            category === "tea" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "tea" && "text-[#e57905] font-bold"
+            }`}
         >
           Trà
         </Link>
         <Link
           to="/collections/cloud"
-          className={`hover:cursor-pointer ${
-            category === "cloud" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "cloud" && "text-[#e57905] font-bold"
+            }`}
         >
           Cloud
         </Link>
         <Link
           to="/collections/hi-tea"
-          className={`hover:cursor-pointer ${
-            category === "hi-tea" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "hi-tea" && "text-[#e57905] font-bold"
+            }`}
         >
           Hi-Tea Healthy
         </Link>
         <Link
           to="/collections/tra-xanh"
-          className={`hover:cursor-pointer ${
-            category === "tra-xanh" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "tra-xanh" && "text-[#e57905] font-bold"
+            }`}
         >
           Trà Xanh - Sô cô la
         </Link>
         <Link
           to="/collections/da-xay"
-          className={`hover:cursor-pointer ${
-            category === "da-xay" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "da-xay" && "text-[#e57905] font-bold"
+            }`}
         >
           Thức uống đá xay
         </Link>
         <Link
           to="/collections/snack"
-          className={`hover:cursor-pointer ${
-            category === "snack" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "snack" && "text-[#e57905] font-bold"
+            }`}
         >
           Bánh & Snack
         </Link>
         <Link
           to="/collections/thuong-thuc-tai-nha"
-          className={`hover:cursor-pointer ${
-            category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
-          }`}
+          className={`hover:cursor-pointer ${category === "thuong-thuc-tai-nha" && "text-[#e57905] font-bold"
+            }`}
         >
           Thưởng Thức Tại Nhà
         </Link>
