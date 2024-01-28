@@ -1,7 +1,7 @@
 import { Button, Card, Typography, Input } from "@material-tailwind/react";
 
 import { v4 as uuidv4 } from "uuid";
-import * as CurrencyFormat from "react-currency-format";
+import CurrencyFormat from "react-currency-format";
 import { Empty } from "antd";
 
 // Reduc/redux-toolkit config import

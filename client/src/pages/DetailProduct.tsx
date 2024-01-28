@@ -12,7 +12,7 @@ import { Image } from "antd";
 import { toast } from "react-toastify";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as CurrencyFormat from "react-currency-format";
+import CurrencyFormat from "react-currency-format";
 
 // Reduc/redux-toolkit config import
 import { useDispatch, useSelector } from "react-redux";
