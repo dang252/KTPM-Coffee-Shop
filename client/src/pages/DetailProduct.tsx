@@ -281,12 +281,12 @@ const DetailProduct = () => {
                         color: "hotpink",
                       }}
                     />
-                  ) : (
+                  ) : (userId) ? (
                     <HeartOutlined
                       className="hover:text-pink-400"
                       style={{ fontSize: "30px", marginLeft: "10px" }}
                     />
-                  )}
+                  ) : null}
                 </div>
               </div>
               {/* <p className="font-bold text-2xl">{name}</p> */}

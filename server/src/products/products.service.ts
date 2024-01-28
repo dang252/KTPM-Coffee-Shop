@@ -163,7 +163,7 @@ export class ProductsService {
             { toppingId: 8, toppingName: 'Kem Phô Mai Macchiato', toppingPrice: 10000 },
             { toppingId: 9, toppingName: 'Shot Espresso', toppingPrice: 10000 },
             { toppingId: 10, toppingName: 'Bánh Flan', toppingPrice: 15000 },
-            { toppingId: 10, toppingName: 'Sốt Caramel', toppingPrice: 10000 },
+            { toppingId: 11, toppingName: 'Sốt Caramel', toppingPrice: 10000 },
         ];
         const products = [
             {
