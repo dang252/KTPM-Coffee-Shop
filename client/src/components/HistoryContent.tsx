@@ -30,7 +30,7 @@ const HistoryContent = () => {
 
   const handleGetBillDetail = async () => {
     try {
-      const res = await dispatchAsync(getUserBillHistory(Number(userId)));
+      const res = await dispatchAsync(getUserBillHistory(Number(userId))).unwrap();
       setbillList(res.payload);
 
       console.log(res);

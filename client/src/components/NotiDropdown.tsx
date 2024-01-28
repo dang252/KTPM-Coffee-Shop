@@ -1,8 +1,9 @@
 import { Avatar, Dropdown, Badge } from "antd";
 import type { MenuProps } from "antd";
 import { UserOutlined, BellOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useNavigate } from "react-router-dom";
 
 // interface PropType {
 //   isDarkMode: boolean;
@@ -10,13 +11,33 @@ import { RootState } from "../redux/store";
 
 const NotiDropdown = () => {
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleOnClick = (key: number) => {
+    dispatch({
+      type: "remove_notification",
+      payload: {
+        id: key
+      }
+    });
+    console.log("items", items)
+    navigate("/collections/all")
+  }
+
   const notificationList = useSelector<RootState, any>(
     (state) => state.socket.notificationList
   );
-  const items: MenuProps["items"] = notificationList.map((noti: any, index: any) => {
+
+  const notificationCount = useSelector<RootState, any>(
+    (state) => state.socket.notificationCount
+  );
+
+
+  const items: MenuProps["items"] = notificationList.map((noti: any) => {
     return ({
       label: (
-        <div className="p-2 rounded-md flex items-center justify-between hover:cursor-pointer">
+        <div className="p-2 rounded-md flex items-center justify-between hover:cursor-pointer" onClick={() => { handleOnClick(noti.id) }}>
           <div className="flex items-center">
             <div>
               <Avatar size={50} icon={<UserOutlined />} />
@@ -29,14 +50,14 @@ const NotiDropdown = () => {
           </div>
         </div>
       ),
-      key: index
+      key: noti.id
     })
   })
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
       <Badge
-        count={notificationList.length}
+        count={notificationCount}
         className="relative hover:cursor-pointer hover:text-blue-500"
       >
         <BellOutlined className="text-2xl" />

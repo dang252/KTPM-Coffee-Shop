@@ -8,8 +8,8 @@ import {
   updateOnline,
   updateNotification,
   acceptClassRequest,
-  refuseClassRequest,
   confirmAcceptClass,
+  removeNotification,
 } from "../actions/socket.action";
 
 // Interface declair
@@ -57,13 +57,16 @@ const socketReducer = createReducer(initialState, (builder) => {
         state.notificationList.push(action.payload);
       }
     })
-    .addCase(refuseClassRequest, (state, action: any) => {
+    .addCase(removeNotification, (state, action: any) => {
       if (action.payload) {
+        console.log("payload", action.payload)
+        console.log("current noti list", state.notificationList)
         state.notificationList = state.notificationList.filter((noti) => {
           return noti.id !== action.payload.id;
         });
+        console.log("filtered noti list", state.notificationList)
+        state.notificationCount = state.notificationCount - 1;
       }
-      state.notificationCount = state.notificationCount - 1;
     })
     .addCase(acceptClassRequest, (state, action: any) => {
       if (action.payload) {

@@ -9,3 +9,4 @@ export const updateNotification = createAction("update_notification");
 export const acceptClassRequest = createAction("accept_class_request");
 export const refuseClassRequest = createAction("refuse_class_request");
 export const confirmAcceptClass = createAction("confirm_accept_class");
+export const removeNotification = createAction("remove_notification");

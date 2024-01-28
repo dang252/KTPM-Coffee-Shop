@@ -35,9 +35,9 @@ export class OrdersService {
       throw new HttpException('PRODUCT NOT FOUND', HttpStatus.BAD_REQUEST)
     }
     total = total + product.productPrice;
-    if (detail.size && detail.size == "m")
+    if (detail.size && detail.size == "medium")
       total += product.upsize[0];
-    else if (detail.size && detail.size == "l")
+    else if (detail.size && detail.size == "large")
       total += product.upsize[1];
 
     if (detail.toppingIds) {
@@ -46,7 +46,7 @@ export class OrdersService {
         total += toppings[j].toppingPrice
       }
     }
-
+    console.log("total detail", total)
     return total
   }
 
@@ -54,6 +54,7 @@ export class OrdersService {
     let total = 0;
     for (let i = 0; i < details.length; i++) {
       total += (await this.calcProductTotalPrice(details[i])) * details[i].quantity
+      console.log("total", i, total)
     }
     return total
   }

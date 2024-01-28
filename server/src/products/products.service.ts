@@ -39,6 +39,10 @@ export class ProductsService {
         return this.productRepository.findOneBy({ productId: id });
     }
 
+    async findProductByIds(ids: number[]): Promise<Products[]> {
+        return this.productRepository.find({ where: { productId: In([...ids]) } });
+    }
+
     async findToppingById(id: number): Promise<Topping> {
         return this.toppingRepository.findOneBy({ toppingId: id });
     }

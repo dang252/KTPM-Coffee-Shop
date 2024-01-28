@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductsService } from 'src/products/products.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
+import { Products } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class PromotionService {
@@ -57,6 +58,11 @@ export class PromotionService {
         newPromotion.endDate = new Date(req.endDate)
         newPromotion.productIds = req.productIds;
       }
+      //get all product name:
+      const products = await productsService.findProductByIds(req.productIds)
+      const productNames = products.map((product: Products) => {
+        return product.productName;
+      })
       // console.log(newPromotion)
       await repo.save(newPromotion)
       console.log("create message")
@@ -67,13 +73,26 @@ export class PromotionService {
           receivedUser = receivedUser.concat(users);
         }
       }
+      let message = "Sản phẩm bạn đang quan tâm cùng nhiều sản phẩm khác ("
+      // add product name 
+      const n = (productNames.length > 3) ? 3 : productNames.length
+      for (let i = 0; i < n; i++) {
+        message += productNames[i] + ", "
+      }
+      if (n > 1) {
+        message += "..."
+      }
+      //
+      message += ") hiện đang được khuyến mãi!"
+      console.log(message)
+
       receivedUser = [...new Set(receivedUser)]
       for (let i = 0; i < receivedUser.length; i++) {
         const newMessage = new Message;
         {
           newMessage.userId = receivedUser[i]
           newMessage.status = "PENDING"
-          newMessage.messageInfo = "Sản phẩm bạn quan tâm hiện đang được khuyến mãi!"
+          newMessage.messageInfo = message
           newMessage.promotionId = newPromotion.promotionId
         }
         await msgRepo.save(newMessage)

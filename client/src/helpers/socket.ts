@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 // Listen event to socket
 export const StartListeners = (socket: any, dispatch: any) => {
   socket.on("user_connected", (rs: { clientId: string; uid: string }) => {
@@ -13,9 +15,13 @@ export const StartListeners = (socket: any, dispatch: any) => {
   socket.on("promotion_notification", (rs: any) => {
     dispatch({
       type: "update_notification",
-      payload: rs,
+      payload: {
+        message: rs.message,
+        date: rs.date,
+        id: uuidv4(),
+      },
     });
-    console.log(rs.message + " " + rs.createdAt)
+    console.log("socket", rs)
   });
 
 };
@@ -30,5 +36,3 @@ export const SendHandshake = async (socket: any, username: string, userId: numbe
     }
   );
 };
-
-

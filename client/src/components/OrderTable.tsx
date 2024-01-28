@@ -46,25 +46,12 @@ const OrderTable = () => {
   );
 
   const handleGetTotalBill = (cart: CartProduct[]) => {
-    const value = cart.map((product) => {
-      const orginialPrice = product?.price;
-      let toppingPrice = 0;
-
-      if (
-        product?.topping?.length !== 0 &&
-        product?.topping?.length !== undefined
-      ) {
-        toppingPrice = product?.topping?.length * 10000;
-      }
-
-      return orginialPrice + toppingPrice;
-    });
-
-    const sum = value.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue;
-    }, 0);
-
-    setTotal(sum * 10);
+    console.log("cart", cart)
+    let sum = 0;
+    for (let i = 0; i < cart?.length; i++) {
+      sum += cart[i].price * 1000;
+    }
+    setTotal(sum);
   };
 
   useEffect(() => {

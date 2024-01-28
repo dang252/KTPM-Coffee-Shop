@@ -121,16 +121,16 @@ const DetailProduct = () => {
     if (size === "medium")
       setPrize(
         quantity *
-          (initPrice +
-            product?.product.upsize[0] / 1000 +
-            handleGetToppingPrice(toppings))
+        (initPrice +
+          product?.product.upsize[0] / 1000 +
+          handleGetToppingPrice(toppings))
       );
     if (size === "large")
       setPrize(
         quantity *
-          (initPrice +
-            product?.product.upsize[1] / 1000 +
-            handleGetToppingPrice(toppings))
+        (initPrice +
+          product?.product.upsize[1] / 1000 +
+          handleGetToppingPrice(toppings))
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quantity, product]);
@@ -149,8 +149,8 @@ const DetailProduct = () => {
     setSize(type);
     setPrize(initPrice);
     if (type === "small") setPrize(initPrice);
-    if (type === "medium") setPrize(initPrice + 6.0);
-    if (type === "large") setPrize(initPrice + 10.0);
+    if (type === "medium") setPrize(initPrice + product?.product.upsize[0] / 1000);
+    if (type === "large") setPrize(initPrice + product?.product.upsize[1] / 1000);
   };
 
   const handleAddTopping = (id: number, toppingPrice: number) => {
@@ -298,11 +298,10 @@ const DetailProduct = () => {
               <p className="font-semibold">Chọn size (bắt buộc)</p>
               <div className="flex flex-wrap gap-5">
                 <div
-                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${
-                    size === "small"
-                      ? "text-white bg-[#e57905] border-[#e57905]"
-                      : "text-gray-600 bg-white border-gray-400"
-                  }`}
+                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${size === "small"
+                    ? "text-white bg-[#e57905] border-[#e57905]"
+                    : "text-gray-600 bg-white border-gray-400"
+                    }`}
                   onClick={() => {
                     handleChooseSize("small");
                   }}
@@ -322,11 +321,10 @@ const DetailProduct = () => {
                   <p className="text-sm">Nhỏ + 0 đ</p>
                 </div>
                 <div
-                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${
-                    size === "medium"
-                      ? "text-white bg-[#e57905] border-[#e57905]"
-                      : "text-gray-600 bg-white border-gray-400"
-                  }`}
+                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${size === "medium"
+                    ? "text-white bg-[#e57905] border-[#e57905]"
+                    : "text-gray-600 bg-white border-gray-400"
+                    }`}
                   onClick={() => {
                     handleChooseSize("medium");
                   }}
@@ -348,11 +346,10 @@ const DetailProduct = () => {
                   </p>
                 </div>
                 <div
-                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${
-                    size === "large"
-                      ? "text-white bg-[#e57905] border-[#e57905]"
-                      : "text-gray-600 bg-white border-gray-400"
-                  }`}
+                  className={`py-2 px-5 flex items-center gap-3 rounded-md border hover:cursor-pointer ${size === "large"
+                    ? "text-white bg-[#e57905] border-[#e57905]"
+                    : "text-gray-600 bg-white border-gray-400"
+                    }`}
                   onClick={() => {
                     handleChooseSize("large");
                   }}
