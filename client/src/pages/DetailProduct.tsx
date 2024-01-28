@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 import { Image } from "antd";
 
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as CurrencyFormat from "react-currency-format";
